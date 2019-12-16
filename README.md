@@ -1,12 +1,13 @@
 # TheBookOfOhdsi
 
-오딧세이 한국 네트워크 책입니다.
+The Book of OHDSIの日本語翻訳版作成プロジェクトです。
+OHDSI Korea チームのご厚意により、すでに完成した韓国語版をベースにして日本語翻訳をしています。
 
-집필 중인 온라인 판은 하기 주소에서 보실 수 있습니다. 
+執筆中のオンライン版は、下記から見ることができるようになる予定ですが、まだできていません。
 
-https://ohdsi-korea.github.io/TheBookOfOhdsiKorea/
+https://ohdsi-japan.github.io/TheBookOfOhdsiJapan/
 
-책 수정에 대한 설명은 [the OHDSI Wiki](http://www.ohdsi.org/web/wiki/doku.php?id=projects:workgroups:notes_on_writing_text_for_the_book) 와 [Book of OHDSI Cheat Sheet](https://raw.githubusercontent.com/OHDSI/TheBookOfOhdsi/master/extras/CheatSheet.pdf) 을 확인하시기 바랍니다. 
-[수정 방법 동영상](https://youtu.be/HAqLRwgEqZw) 을 참고하실 수도 있습니다. 
+加筆修正の際には、[the OHDSI Wiki]（http://www.ohdsi.org/web/wiki/doku.php?id=projects:workgroups:notes_on_writing_text_for_the_book）と[Book of OHDSI Cheat Sheet]（https：//raw.githubusercontent.com/OHDSI/TheBookOfOhdsi/master/extras/CheatSheet.pdf）を確認してください。
+[修正方法動画]（https://youtu.be/HAqLRwgEqZw）もあります。
 
 Under the Development
