@@ -1,0 +1,128 @@
+---
+title： "The Book of OHDSI オデッセイブック"
+author： "OHDSI Japan Chapter"
+date： "` r Sys.Date（） `"
+classoption：11pt
+geometry：
+ -  paperheight = 10in
+ -  paperwidth = 7in
+ -  margin = 1in
+ -  inner = 1in
+ -  outer = 0.65in
+ -  top = 0.8in
+ -  bottom = 0.8in
+mainfont：HiraKakuGothic
+bibliography：
+ -  book.bib
+ -  packages.bib
+description：A book about the Observational Health Data Sciences and Informatics（OHDSI）。 It described the OHDSI community、open standards and open source software。
+documentclass：book
+favicon：images / favicon.ico
+github-repo：OHDSI-Japan / TheBookOfOhdsiJapan
+link-citations：yes
+cover-image：images / Cover / Cover.png
+site：bookdown :: bookdown_site
+biblio-style：apalike
+url：https://ohdsi-japan.github.io/TheBookOfOhdsiJapan/
+---
+
+```{r setup, include=FALSE}
+options(
+  htmltools.dir.version = FALSE, formatR.indent = 2,
+  width = 55, digits = 4, warnPartialMatchAttr = FALSE, warnPartialMatchDollar = FALSE
+)
+
+local({
+  r = getOption('repos')
+  if (!length(r) || identical(unname(r['CRAN']), '@CRAN@'))
+    r['CRAN'] = 'https://cran.rstudio.com' 
+  options(repos = r)
+})
+
+lapply(c('SqlRender', 'DatabaseConnector'), function(pkg) {
+  if (system.file(package = pkg) == '') install.packages(pkg)
+})
+```
+
+＃序文{ - }
+
+<img src="images/Cover/Cover.png" width="250" height="375" alt="Cover image" align="right" style="margin: 0 1em 0 1em" /> This is a book about the Observational Health Data Sciences and Informatics (OHDSI) collaborative. The OHDSI community wrote the book to serve as a central knowledge repository for all things OHDSI. The Book is a living document, community-maintained through open-source development tools, and evolves continuously. The online version, available for free at [http://book.ohdsi.org](http://book.ohdsi.org), always represents the latest version. A physical copy of the book is available from [Amazon](https://www.amazon.com/OHDSI-Observational-Health-Sciences-Informatics/dp/1088855199) at cost price.
+
+## 本書の目標{ - }
+
+この本は、OHDSI関連のすべての知識の中央リポジトリとしての機能を果たすべく書かれており、OHDSIコミュニティ、CDMデータ基準とOHDSIツールの記述に重点を置いた。 そして、OHDSIの初心者と熟練者の両方のために、現実的に必要な理論と、使用方法の実用的な部分の両方を説明するようにした。この本を読めば、OHDSIとは何か、また、その旅にどのように参加するかについて理解できるだろう。また、CDMと標準化された用語とは何なのか、そしてそれが観察的ヘルスケアデータベースの標準化にどのように使用されるかわかるだろう。この類のデータの３つの主要な利用事例であるClinical characterization、Population-level estimation、Population-level predictionについても学ぶことができる。この本を通じて、この3つの活動を支援するOHDSIのオープンソースのツールと使用方法を知ることができる。データ品質、臨床的妥当性、ソフトウェアの妥当性、方法論の妥当性等に関する章で、CDMから生成されたエビデンスの品質をどのように確立するかを説明する。最後に、これらの研究を分散型研究ネットワーク上で実施するためにOHDSIツールをどのように使用するかを学ぶだろう。
+
+## 本書の構成{ - }
+
+この本は、5つの主要なセクションにまとめられている：
+
+I）OHDSIコミュニティ
+II）単一データ表現
+III）データ分析
+IV）エビデンスの品質
+V）OHDSI研究
+
+それぞれのセクションは複数の章で構成されており、それぞれの章は以下の順で構成されている：序論、理論、実行、まとめ、演習
+
+##貢献{ - }
+
+原文のそれぞれの長該当する章を導いた主な著者を表記している。しかし、主な著者のほか、この本を完成するのに貢献した多くの人々があり、下の貢献者に感謝の意を表する：
+
+```{r echo=FALSE, eval=TRUE}
+contributors <- read.csv("Contributors.csv")
+contributors <- contributors[order(contributors$lastName), ]
+names <- paste(contributors$firstName, contributors$lastName)
+colCount <- 3
+if (length(names) %% colCount != 0) {
+  names <- c(names, rep("", colCount - length(names) %% colCount))
+}
+table <- matrix(names, ncol = colCount, byrow = TRUE)
+table <- as.data.frame(table)
+knitr::kable(table, col.names = NULL)
+```
+
+##ソフトウェアのバージョン{ - }
+
+この本の多くの部分は、OHDSIのオープンソースソフトウェアを扱っており、このソフトウェアは、時間の経過とともに進化し続けていくだろう。開発者は、使用者に一貫して安定した体験を提供しようと最善を尽くしたことや、時間が経つにつれ、ソフトウェアの改善により、必然的に、この本の内容がもう合わない場合が発生するだろう。これを補完するために、コミュニティは、オンライン版を使用して変化を継続的に更新する予定であり、新たな版の実物の本を出版する予定である。
+この本が書かれたバージョンのソフトウェアのバージョンは、下記を参考にすればされる：
+
+ -  ACHILLES：version 1.6.6
+ -  ATLAS：version 2.7.3
+ -  EUNOMIA：version 1.0.0
+ -  Methods Library packages：テーブル参照\ @ref（tab：packageVersions）
+
+`` `{r packageVersionsは、echo = FALSE、eval = TRUE}
+packageVersions < -  read.csv（ "PackageVersions.csv」）
+packageVersions < -  packageVersions [order（packageVersions $ package）、]
+knitr :: kable（packageVersions、col.names = c（ "Package"、 "Version"）、row.names = FALSE、booktabs = TRUE、caption = 'Versions of packages in the Methods Library used in this book。」）
+`` `
+
+##ライセンス{ - }
+
+この本は、[Creative Commons Zero v1.0 Universal license]（http://creativecommons.org/publicdomain/zero/1.0/）に印加さ​​れた。
+
+！[]（images / Preface / cc0.png）
+
+## The Book of OHDSIが書かれた過程{ - }
+
+この本の原文であるThe Book of OHDSIは、[bookdown]（https://bookdown.org）パッケージを使用した[RMarkdown]（https://rmarkdown.rstudio.com）に書かれた。オンライン版は、常に統合システムである[「travis "]（http://travis-ci.org/）を介して[https://github.com/OHDSI/TheBookOfOhdsi](https://github.com/OHDSI/ TheBookOfOhdsi）のストレージを使用して、自動的に作成された。これらのオンライン版は、定期的にスナップショット形式で保存され、保存されたファイルを「版」と表記する。このエディションの実物冊子はアマゾンで購入が可能である。
+
+##この本が翻訳された過程{ - }
+
+2019年OHDSIシンポジウムでThe Book of OHDSIが配布された後、韓国OHDSI研究者が共同で翻訳作業を進めた。原文と同様bookdownパッケージを同一に使用して、[https://github.com/OHDSI-Korea/TheBookOfOhdsiKorea](https://github.com/OHDSI-Korea/TheBookOfOhdsiKorea）ストアで作成した。
+
+韓国OHDSIネットワークの発展のために対価を望まず、翻訳作業に取り組んでいただいた以下のの共同翻訳者に大きな感謝の言葉を申し上げる。
+
+|名前|所属|
+|：------：|：------------：|
+|ガンミラ|成均館大学|
+|ギムドヨプ|非常に大学|
+|ミナ|三星ソウル病院|
+|ギムイソク|漢陽大学|
+|金チョンス|非常に大学|
+|バクレウン|非常に大学|
+|バクユジン|非常に大学|
+|バクジミョン|非常に大学|
+|バクチョルヒョン|非常に大学|
+|ヤンヨウンモ|非常に大学|
+|誤送
