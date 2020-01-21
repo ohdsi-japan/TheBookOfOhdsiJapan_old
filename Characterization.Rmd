@@ -1,4 +1,4 @@
-# 임상적 특성 분석 {#Characterization}
+# 患者背景の分析 {#Characterization}
 
 *Chapter leads: Anthony Sena & Daniel Prieto-Alhambra*
 
