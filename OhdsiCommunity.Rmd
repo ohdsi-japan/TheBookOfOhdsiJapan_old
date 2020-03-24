@@ -63,7 +63,7 @@ OHDSI(Observational Health data Sciences and Informatics)는 보다 더 나은 �
 
 > Observational research is a field which will benefit greatly from disruptive thinking. We actively seek and encourage fresh methodological approaches in our work.
 
-* **再現性 (Reproducibility)**: 보건향상을 위해서는 정확하고 재현가능하며 잘 보정된 근거가 필요하다.
+* **再現性 (Reproducibility)**: 健康の向上には、正確で再現性があり、十分に調整されたエビデンスが必要です。
 
 > Accurate, reproducible, and well-calibrated evidence is necessary for health improvement.
 
