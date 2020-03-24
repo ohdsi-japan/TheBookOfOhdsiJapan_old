@@ -41,45 +41,45 @@ OMOP 프로젝트가 FDA의 능동 감시에 도움을 줄 수 있는 관찰형 
 이러한 통찰을 통해, OHDSI가 태어났다.
 
 
-## 개방형 과학 공동체로서의 OHDSI
+## オープンサイエンスとしてのOHDSI
 
 OHDSI(Observational Health data Sciences and Informatics)는 보다 더 나은 의료 결정과 더 나은 보건 관리를 촉진할 수 있는 과학적 근거를 공동으로 생성하도록 함으로써 보건 수준을 향상하는 것을 목표로 하는 개방형 과학 공동체다. [@Hripcsak2015] OHDSI는 관찰형 건강 데이터(observational health data)의 적절한 사용에 대한 과학적 모범 사례를 확립하기 위한 방법론적 연구를 수행하고, 이러한 연구방법론을 일관되고 투명하며 재현 가능한 솔루션으로 코드화하는 오픈 소스 분석 소프트웨어를 개발하여, 보건의료 정책 및 환자 치료에 도움이 될 수 있는 임상적 근거를 마련하는 데에 적용할 수 있도록 노력한다.
 
-### OHDSI의 사명 Mission
+### OHDSIのMission
 
 더 나은 의학적 결정과 의료 발전을 촉진할 수 있는 근거를 상호협력하여 생성할 수 있도록 공동체에 힘을 실어줌으로써 보건을 개선한다.
 
 > To improve health by empowering a community to collaboratively generate the evidence that promotes better health decisions and better care. \index{mission}
 
-### OHDSI의 이상 Vision
+### OHDSIのVision
 
 관찰형 연구를 통해 건강과 질병에 대한 포괄적인 이해가 가능한 세상
 
 > A world in which observational research produces a comprehensive understanding of health and disease. \index{vision}
 
-### OHDSI의 목표 Objectives
+### OHDSIの目的
 
-* **혁신 Innovation**: 관찰형 연구는 파괴적 사유를 통해서 가장 혜택을 얻을 수 있는 분야이다. 우리는 우리의 업무에 새로운 방법론적인 접근을 적극적으로 찾고 격려한다.
+* **イノベーション(Innovation)**: 관찰형 연구는 파괴적 사유를 통해서 가장 혜택을 얻을 수 있는 분야이다. 우리는 우리의 업무에 새로운 방법론적인 접근을 적극적으로 찾고 격려한다.
 
 > Observational research is a field which will benefit greatly from disruptive thinking. We actively seek and encourage fresh methodological approaches in our work.
 
-* **재현 Reproducibility**: 보건향상을 위해서는 정확하고 재현가능하며 잘 보정된 근거가 필요하다.
+* **再現性 (Reproducibility)**: 보건향상을 위해서는 정확하고 재현가능하며 잘 보정된 근거가 필요하다.
 
 > Accurate, reproducible, and well-calibrated evidence is necessary for health improvement.
 
-* **공동체 Community**: 우리는 OHDSI에 적극적으로 참여하는 모든 사람 (환자, 의료직 전문가, 연구자, 또는 단순히 우리의 주장을 믿는 사람) 을 환영한다.
+* **コミュニティ (Community)**: 우리는 OHDSI에 적극적으로 참여하는 모든 사람 (환자, 의료직 전문가, 연구자, 또는 단순히 우리의 주장을 믿는 사람) 을 환영한다.
 
 > Everyone is welcome to actively participate in OHDSI, whether you are a patient, a health professional, a researcher, or someone who simply believes in our cause.
 
-* **협력 Collaboration**: 우리는 우리 공동체 참여자들의 현실적 요구를 최우선적으로 다루기 위해서 함께 일한다.
+* **コラボレーション (Collaboration)**: 우리는 우리 공동체 참여자들의 현실적 요구를 최우선적으로 다루기 위해서 함께 일한다.
 
 > We work collectively to prioritize and address the real world needs of our community’s participants.
 
-* **개방 Openness**: 우리는 방법론, 도구, 우리가 생성하는 근거 등 우리 공동체의 모든 진행사항을 개방하고 공개적으로 접근가능할 수 있도록 최대한 노력한다.
+* **公開 (Openness)**: 우리는 방법론, 도구, 우리가 생성하는 근거 등 우리 공동체의 모든 진행사항을 개방하고 공개적으로 접근가능할 수 있도록 최대한 노력한다.
 
 > We strive to make all our community’s proceeds open and publicly accessible, including the methods, tools and the evidence that we generate.
 
-* **선행 Beneficence**: 우리는 우리 공동체에 속한 개인과 기관의 권리를 보호하기 위해서 항상 노력한다.
+* **メリット (Beneficence)**: 우리는 우리 공동체에 속한 개인과 기관의 권리를 보호하기 위해서 항상 노력한다.
 
 > We seek to protect the rights of individuals and organizations within our community at all times.
 
