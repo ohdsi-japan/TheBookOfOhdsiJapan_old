@@ -138,7 +138,7 @@ Table: (\#tab:code1001) 同一の概念コード1001を持つが、用語集、�
 |35803438 | 1001 | Granulocyte colony-stimulating factors | Drug | HemOnc | Component Class
 |35942070 | 1001 | AJCC TNM Clin T | Measurement | NAACCR | NAACCR Variable
 |1036059 | 1001 | Antipyrine | Drug | RxNorm | Ingredient
-38003544 | 1001 | Residential Treatment - Psychiatric | Revenue Code | Revenue Code | Revenue Code
+|38003544 | 1001 | Residential Treatment - Psychiatric | Revenue Code | Revenue Code | Revenue Code
 |43228317 | 1001 | Aceprometazine maleate | Drug | BDPM | Ingredient
 |45417187 | 1001 | Brompheniramine Maleate, 10 mg/mL injectable solution | Drug | Multum | Multum
 |45912144 | 1001 | Serum | Specimen | CIEL | Specimen
