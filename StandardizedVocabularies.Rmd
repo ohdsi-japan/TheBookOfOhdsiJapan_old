@@ -46,7 +46,7 @@ OHDSI は、観測研究の世界標準であるOMOP CDMを開発しました。
 
 ### Source of Vocabularies: Adopt Versus Build
 
-OHDSI は一般的に、(i)多くの用語集が既にコミュニティの観察データに利用されていること、(ii)用語集の構築と維持は複雑であり、成熟するまでに長い期間をかけて多くの利害関係者の意見を必要とするため、一から構築するよりも既存の用語集を採用することを選びました。専門組織が提供する用語集は、生成、非推奨、マージ、分割というライフサイクルを経ています（セクション \@ref(conceptLifeCycle)）。現在のところ、OHDSI は、型概念(Type Concepts)（例えば、条件型概念）のような内部管理用用語集のみを作成しています。唯一の例外は、米国外でのみ使用される薬剤をカバーする語彙であるRxNorm Extensionです（セクション\@ref(rxNormExtension)参照）。
+OHDSI は一般的に、(i)多くの用語集が既にコミュニティの観察データに利用されていること、(ii)用語集の構築と維持は複雑であり、成熟するまでに長い期間をかけて多くの利害関係者の意見を必要とするため、一から構築するよりも既存の用語集を採用することを選びました。専門組織が提供する用語集は、生成、非推奨、マージ、分割というライフサイクルを経ています（セクション \@ref(conceptLifeCycle)）。現在のところ、OHDSI は、型概念(Type Concepts)（例えば、症状型概念）のような内部管理用用語集のみを作成しています。唯一の例外は、米国外でのみ使用される薬剤をカバーする語彙であるRxNorm Extensionです（セクション\@ref(rxNormExtension)参照）。
 
 ## Concepts
 
@@ -99,7 +99,7 @@ Table: (\#tab:sublassification) 概念クラスにおける分類手法
 
 ### Standard Concepts {#standardConcepts}
 
-各々の臨床事象に関して、（候補としての数ある概念の中から）一つの概念が標準概念として選ばれます。例えば、MESHコードD001281、CIELコード148203、SNOMEDコード49436004、ICD9CMコード427.31、ReadコードG573000は、すべて条件ドメインにおいて「心房細動」を定義していますが、SNOMEDの概念だけが標準概念として採用され、データの中で条件を表すのに使われます。他の概念は非標準概念またはソース概念とされ、標準概念へマッピングされます。標準概念は、STANDARD_CONCEPTフィールドの "S "によって示されます。そして、"_CONCEPT_ID "で終わるCDMフィールドにデータを記録するためには、これらの標準概念のみが使用されます。\index{standard concept}
+各々の臨床事象に関して、（候補としての数ある概念の中から）一つの概念が標準概念として選ばれます。例えば、MESHコードD001281、CIELコード148203、SNOMEDコード49436004、ICD9CMコード427.31、ReadコードG573000は、すべて症状ドメインにおいて「心房細動」を定義していますが、SNOMEDの概念だけが標準概念として採用され、データの中で症状を表すのに使われます。他の概念は非標準概念またはソース概念とされ、標準概念へマッピングされます。標準概念は、STANDARD_CONCEPTフィールドの "S "によって示されます。そして、"_CONCEPT_ID "で終わるCDMフィールドにデータを記録するためには、これらの標準概念のみが使用されます。\index{standard concept}
 
 ### Non-Standard Concepts
 
@@ -109,7 +109,7 @@ Table: (\#tab:sublassification) 概念クラスにおける分類手法
 
 これらの概念は標準概念ではないので、データを表現するために使用することはできません。しかし、これらの概念は標準概念と一緒に階層を構成していますので、階層的なクエリを実行するために使用できます。例えば、MedDRA コード 10037908 の全ての子孫（MedDRA ライセンスを取得していないユーザーには表示されません。アクセス制限についてはセクション　\@ref(accessVocabularies)を確認下さい。）は、心房細動のための標準的なSNOMEDコンセプトを取得します（CONCEPT_ANCESTORテーブルを使用した階層的なクエリについては、セクション\@ref(conceptAncestor)を参照してください） - Figure ＠ref(fig:hierarchy)を参照してください。\index{classification concept}
 
-```{r hierarchy, fig.cap='条件ドメインにおける標準概念、非標準概念またソース概念、および分類概念とその階層的な関係について。ほとんどの標準的な条件概念にはSNOMEDが使用されます（ICDO3に由来するいくつかの腫瘍関連概念を含む）。階層的な分類概念にはMedDRAの概念が使用されます。他のすべての用語集には階層に参加しない非標準またはソース概念が含まれている。',echo=FALSE, out.width='100%', fig.align='center'}
+```{r hierarchy, fig.cap='症状ドメインにおける標準概念、非標準概念またソース概念、および分類概念とその階層的な関係について。ほとんどの標準的な症状概念にはSNOMEDが使用されます（ICDO3に由来するいくつかの腫瘍関連概念を含む）。階層的な分類概念にはMedDRAの概念が使用されます。他のすべての用語集には階層に参加しない非標準またはソース概念が含まれている。',echo=FALSE, out.width='100%', fig.align='center'}
 knitr::include_graphics("images/StandardizedVocabularies/hierarchy.png")
 ```  
 
@@ -194,7 +194,7 @@ Table: (\#tab:mappingRelationships) マッピング関係性の種類
 
 "等価な概念 "とは、同じ意味を持つということです。重要なことは、階層的な子孫が同じ意味空間をカバーしていることを意味するということです。等価な概念が利用できず、その概念が標準化されていない場合でも、、少し広い概念にマッピング（いわゆる"up-hill"マッピング」）されます。例えば、ICD10CM W61.51 "Bitten by goose （ガチョウに噛まれた）"は、標準状態概念において一般的に使用されるSNOMED統制用語集には等価なものがありません。その代わりに、SNOMED 217716004 "Peck by bird (鳥につつかれた)"にマッピングされ、その鳥がガチョウであるという文脈が失われます。このような情報の損失が、標準的な研究のユースケースとは無関係であると考えられる場合にのみ、"up-hill"マッピングが使用されます。
 
-いくつかのマッピングは、ソース概念を複数の標準概念に接続します。例えば、ICD9CM 070.43 "Hepatitis E with hepatic coma (肝性昏睡を伴うE型肝炎)"は、SNOMED 235867002 "Acute hepatitis E (急性E型肝炎)"とSNOMED 72836002 "Hepatic Coma (肝性昏睡)"の両方にマッピングされています。その理由は、元々のソース概念が、肝炎と昏睡という2つの条件がプリコーディネートされた組み合わせだからです。SNOMED にはその組み合わせがないため、ICD9CM レコードには 2 つのレコードが書き込まれ、それぞれにマッピングされた標準概念が 1 つずつ書き込まれることになります。
+いくつかのマッピングは、ソース概念を複数の標準概念に接続します。例えば、ICD9CM 070.43 "Hepatitis E with hepatic coma (肝性昏睡を伴うE型肝炎)"は、SNOMED 235867002 "Acute hepatitis E (急性E型肝炎)"とSNOMED 72836002 "Hepatic Coma (肝性昏睡)"の両方にマッピングされています。その理由は、元々のソース概念が、肝炎と昏睡という2つの症状がプリコーディネートされた組み合わせだからです。SNOMED にはその組み合わせがないため、ICD9CM レコードには 2 つのレコードが書き込まれ、それぞれにマッピングされた標準概念が 1 つずつ書き込まれることになります。
 
 関係性 "値へのマップ("Maps to value") "は、実体-属性-値（EAV）モデルに従ったOMOP CDMテーブルの値の分割を目的としている。これは、以下のような状況で適用されます
 
@@ -249,7 +249,7 @@ Table: (\#tab:findingSite) "Finding site of" relationship of "Urethra "の関係
 
 CONCEPT_ANCESTORテーブルは、CONCEPT_RELATIONSHIPテーブルから自動的に構築され、階層的な関係を介して接続されたすべての可能な概念を網羅します。これらは、"Is a" - "Subsumes "のペア（図\@ref(fig:conceptAncestor)参照）や、用語集を越えて階層的に接続された他の関係です。関係性が階層構造に参加するかどうかの選択は、各関係性IDについて、RELATIONSHIP参照テーブルのフラグDEFINES_ANCESTRYによって定義されます。
 
-(ref:foo) 条件 "心房細動 "の階層。第一親等の先祖関係は "Is a "と "Subsumes "の関係によって定義され、すべての高次の関係は推論され、CONCEPT_ANCESTORテーブルに格納される。各概念は、両方のレベルの分離が0に等しい、それ自身の子孫でもあります。 \index{concept!ancestor}   
+(ref:foo) 症状 "心房細動 "の階層。第一親等の先祖関係は "Is a "と "Subsumes "の関係によって定義され、すべての高次の関係は推論され、CONCEPT_ANCESTORテーブルに格納される。各概念は、両方のレベルの分離が0に等しい、それ自身の子孫でもあります。 \index{concept!ancestor}   
   
 ```{r conceptAncestor, fig.cap='(ref:foo)', echo=FALSE, out.width='100%', fig.align='center'}
 knitr::include_graphics("images/StandardizedVocabularies/conceptAncestor.png")
