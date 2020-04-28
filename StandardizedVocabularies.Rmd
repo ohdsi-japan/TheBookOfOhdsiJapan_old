@@ -1,345 +1,350 @@
-# OMOP 표준 용어 {#StandardizedVocabularies}
+# Standardized Vocabularies {#StandardizedVocabularies}
 
 \index{standardized vocabularies}
 
 *Chapter leads: Christian Reich & Anna Ostropolets*
 
-흔히 "용어(the Vocabulary)"라고 불리는 OMOP 표준 용어(Standardized Vocabularies)는 OHDSI 연구 네트워크의 기초적인 부분이자, 공통 데이터 모델(CDM)의 핵심 부분이다. OMOP 표준 용어는 데이터의 내용을 정의함으로써 분석 방법, 정의, 결과를 표준화하여 진정한 원격 (방화벽 뒤에서) 네트워크 연구와 분석을 가능하게 한다. 일반적으로, 코딩 체계를 사용한 구조화된 데이터이든 혹은 자유진술문으로 구성된 데이터이든, 관찰 의료 데이터의 내용을 찾아 해석하는 것은 임상 사건을 설명하는 수 많은 방법을 고민하는 연구 실무자들에게 까지 전달되기 마련이다. OHDSI는 표준화된 형식뿐 아니라 엄격한 표준 컨텐츠와의 조화를 필요로 한다.
+「Vocabulary」と呼ばれるOMOP標準用語集は、Common Data Model（CDM）の不可欠な要素であり、OHDSI研究ネットワークの基盤です。データの内容を定義することにより、手法、定義、結果の標準化が可能になり、ファイアウォールの内側に置かれたデータを研究ネットワークに参加させ分析対象とするための道筋を切り拓きます。通常、観察医療データの内容の検索と解釈は、それがコーディング手法を採用した構造化データであれ、フリーテキストで記述されたものであれ、臨床イベントを記述するための無数の異なる方法に直面している研究者に託されます。OHDSIでは、標準化された形式だけでなく、厳密に標準化された内容に適合させることが求められます。
 
-이 장에서는 먼저 기초적인 부분을 이해하고 활용하기 위해, 표준 용어의 주요 원칙, 구성 요소 및 관련 규칙, 규약 및 일반적인 상황에 대해 설명하고자 한다. 또한 이를 지속적으로 개선하기 위해 커뮤니티의 지원이 필요한 곳을 언급할 것이다.
+この章では、まず、標準化された語彙の主要な原則、そのコンポーネント、関連するルール、規則、およびいくつかの典型的な状況について説明します。これらはすべて、この基本的なリソースを理解して利用するために必要です。また、継続的に改善するためにコミュニティのサポートが必要な場所も紹介します。
 
-## 왜 용어(Vocabularies)인가, 그리고 왜 표준화인가?
+## Why Vocabularies, and Why Standardizing 
 
-의학 용어는 흑사병 (plague: 페스트) 및 기타 질병들을 관리하기 위해 사용했던, 중세 런던의 사망 증명서(Bills of Mortality) 까지 거슬러 올라간다. (그림 \@ref(fig:bill) 참조) \index{Bill of Mortality}
-
-```{r bill, fig.cap='1660 London Bill of Mortality, 당시 알려진 62가지 질병의 분류 체계를 사용하여 사망한 거주자의 사망 원인을 보여준다.',echo=FALSE, out.width='100%', fig.align='center'}
+医学用語は、中世のロンドンでペストやその他の病気の発生を管理するための「Bill of Mortality」にまでさかのぼります（図参照 \@ref(fig:bill)). \index{Bill of Mortality}
+  
+```{r bill, fig.cap='1660年のロンドン死亡率表。当時知られていた62種類の疾患の分類システムを用いて死亡した住民の死因を示したもの',echo=FALSE, out.width='100%', fig.align='center'}
 knitr::include_graphics("images/StandardizedVocabularies/bill.jpg")
-``` 
+```  
+  
+以来、分類の規模と複雑さは大幅に拡大し、処置や診療行為、医薬品、医療機器など医療分野における他領域にも広がっています。ただし主な原則は変わっていません。患者データの収集、分類、分析を目的として、一部の医療コミュニティが合意して管理する語彙、用語、階層、またはオントロジーであるということです。用語集の多くは、長期的な権限を持つ公的機関や政府機関によって維持されています。例えば、世界保健機関（WHO）は、国際疾病分類（ICD）を作成しており、最近では第 11 版（ICD11）が追加されました。各国は、ICD10CM（米国）、ICD10GM（ドイツ）などの国別のローカルバージョンを作成しています。また、政府は医薬品の市場と販売を管理し、認証を受けた医薬品の国立のリポジトリを維持しています。また、民間においても、商用製品や電子カルテ（EHR）システムや医療保険請求報告などの内部使用のために、用語集が使用されています。
 
-그 후, 의학 용어 분류는 규모와 복잡성이 크게 확대되면서 시술, 서비스, 약물, 의료기기 등, 의료의 다른 측면으로 널리 전파되었다. 의학 용어 분류의 주요 원칙은 동일하게 유지된다: 즉, 일부 의료 커뮤니티가 환자 데이터를 획득, 분류 및 분석하기 위한 목적으로 동의한 통제 어휘, 전문용어, 계층 및 언어 concept (ontologies: 온톨로지) 이다. 이러한 용어집의 상당수는 공공기관과 정부 기관에서 장기적으로 의무 관리하고 있다. 예를 들면, 세계보건기구(WHO)는 최근 국제 질병분류(ICD)에 11차 개정판(ICD11)을 추가하였다. 지역 정부들은 ICD10CM(미국), ICD10GM(독일) 등과 같은 국가별 버전을 만들고 있다. 정부들은 또한 의약품의 마케팅과 판매를 통제하고 인증된 의약품의 국가 저장 목록을 운영하고 있다. 용어집은 상업용 제품 또는 내부용으로 민간 부문에서도 사용된다. 예를 들면, 전자건강기록(EHR) 시스템과 의료보험청구용이 있다. 
+結果的に、それぞれの国、地域、医療システム、医療機関が独自の用語集を持っている傾向があり、その用語集で適用されている分類は使用されている場所のみで使われている可能性が高いです。このような無数の用語集が、システムの相互運用性を妨げています。標準化は、患者データの交換を可能にし、グローバルレベルでの健康データ分析を可能にし、診療行為の分析や品質評価に関して体系的で標準化された研究を可能にする鍵である。この問題に対処するために、上記のWHOやSNOMED（Standard Nomenclature of Medicine）やLOINC（Logical Observation Identifiers Names and Codes）のように、多国籍の組織が立ち上がり、幅広い標準規格を作り始めています。 米国では、Health IT Standards Committee（HITAC）がSNOMED、LOINC、医薬品用語集RxNormを標準規格として使用することを全米健康ITコーディネータ（ONC）に勧告して、多様な主体間の健康情報交換のための全国共通プラットフォームでの使用を推奨しています。
 
-그 결과, 각 국가, 지역, 의료시스템 및 의료기관은 그 용어가 사용되는 지역에서만 쓰이는 자체 질병분류체계를 갖고 있을 가능성이 높다. 이러한 무수히 많은 용어집은 사용 중인 시스템의 상호운용성을 방해한다. 표준화는 환자 데이터 교환을 가능하게 하고, 전 세계적 수준의 의료 데이터 분석의 길을 열어주고, 성능 특성 분석 및 품질 평가를 포함한 체계적이고 표준화된 연구를 가능하게 하는 핵심 요소이다. 이러한 문제를 해결하기 위해, 위에서 언급된 WHO와 the Standard Nomenclature of Medicine(SNOMED) 또는 Logical Observation Identifiers Names and Codes(LOINC) 같은 다국적 기관들이 생겨나고 광범위한 표준들을 만들기 시작했다. 미국의 보건 IT 표준 위원회 HITAC(Health IT Standards Committee)는 다양한 단체 간의 건강 정보 교환을 위한 공통 플랫폼에서 사용하기 위해 ONC(National Coordinator for Health IT)의 표준으로 SNOMED, LOINC 및 약물용어인 RxNorm을 사용할 것을 권장하고 있다. 
+OHDSI は、観測研究の世界標準であるOMOP CDMを開発しました。CDMの一部として、OMOP標準用語集は主に2つの目的で利用できます。
 
-OHDSI는 관찰 연구를 위한 국제 표준인 OMOP CDM을 개발했다. CDM의 일부로, OMOP 표준 용어는 다음 두 가지 목적으로 사용 할 수 있다:
+- コミュニティで使用されているすべての用語の共通リポジトリ
+- 研究に利用するための標準化とマッピング
 
-- 커뮤니티에서 사용되는 모든 용어의 공통 저장 자료
-- 연구에 사용하기 위한 표준화와 매핑 
+標準化された用語集はコミュニティに無料で提供されており、OMOP CDMインスタンスには***必須の参照表( mandatory reference table)として使用する必要**があります。
 
-표준화된 용어는 커뮤니티에 무료로 제공되며, **OMOP CDM 실제 사용시마다 필수 참조 테이블로 사용되어야 한다.**
 
-### 표준화된 용어 구축
+### Building the Standardized Vocabularies
 
-표준 용어의 모든 용어는 동일한 공통 형식으로 통합된다. 이를 통해 연구자들이 기존 용어의 여러 가지 형식과 수명 주기 규칙을 이해하거나 처리할 필요가 없다. 모든 용어는 Pallas 시스템[^pallasUrl]을 사용하여 정기적으로 새로워지고 통합 된다. 용어는 OMOP CDM Workgroup의 일부인 OHDSI Vocabulary 팀이 만들어 운영하고 있다. 오류가 발견되면 OHDSI Forums[^forums2Url] 또는 CDM Github 페이지[^cdmIssuesUrl]에 게시하여 오류를 보고하고 리소스를 개선할 수 있도록 도와주길 바란다.\index{Pallas system}
+標準用語集のすべての用語は、共通のフォーマットに統合されています。これにより、研究者は元の用語集の複数の異なるフォーマットやライフサイクルの慣習を理解して扱う必要がなくなります。すべての用語集は定期的に更新され、Pallasシステムを使用して組み込まれています[^pallasUrl]。間違いを見つけた場合は、OHDSI Forums[^forums2Url]またはCDM Github[^cdmIssuesUrl]ページに投稿して、このリソースの改善に役立ててください。\index{Pallas system}
 
 [^pallasUrl]: https://github.com/OHDSI/Vocabulary-v5.0
 [^forums2Url]: https://forums.ohdsi.org
 [^cdmIssuesUrl]: https://github.com/OHDSI/CommonDataModel/issues
 
-### 표준 용어 이용하기 {#accessVocabularies}
+### Access to the Standardized Vocabularies {#accessVocabularies}
 
-표준 용어 정보를 얻기 위해, Pallas를 직접 실행할 필요는 없다. 대신, ATHENA[^athenaUrl]에서 최신 버전을 다운로드하여 로컬 데이터베이스에 적재하면 된다. ATHENA도 용어를 면밀히 검색하는 기능이 있다. \index{ATHENA} \index{standardized vocabularies!download} \index{standardized vocabularies!search}
+標準化された用語集を取得するためには、Pallasを自分で起動する必要はありません。その代わりに、ATHENA[^athenaUrl]から最新版をダウンロードして、ローカルデータベースにロードすることができます。ATHENAは用語集のファセット検索もできます。\index{ATHENA} \index{standardized vocabularies!download} \index{standardized vocabularies!search}
 
 [^athenaUrl]: http://athena.ohdsi.org
 
-모든 표준 용어 테이블에 포함된 zip 파일을 다운로드하려면, OMOP CDM에 필요한 모든 용어집을 선택해야 한다. 표준 concept을 가진 용어집은 (\@ref(standardConcepts)절 참조) 미리 선택되어 있다. source data에 사용되는 vocabularies를 추가한다. 저작권이 있는 용어집은 선택할 수 없다. 해당 용어집을 리스트에 포함하려면 "License required" 버튼을 클릭해야 한다. 용어팀이 당신에게 연락할 것이고, 당신이 라이센스를 제출하도록 요청하거나, 해당 라이센스를 얻는데 적절한 사람들과 연결해줄 것이다.
+すべての標準用語集の表を含むzip ファイルをダウンロードするにあたり、OMOP CDM に必要なすべての語彙を選択してください。標準概念（セクション\@ref(standardConcepts)参照）と非常に一般的な使用法を持つ用語は既定で選択されています。ソースデータで使用されている用語集を追加してください。プロプライエタリな用語集には選択ボタンは表示されません。そのような用語集をリストに組み込むには、「License required」ボタンをクリックしてください。Vocabulary Team から連絡があり、ライセンスの確認やライセンス取得のためのサポートを依頼することができます。
 
-### 용어의 원천: 도입 vs 구축 
+### Source of Vocabularies: Adopt Versus Build
 
-OHDSI는 일반적으로 용어집을 새로 구축하기보다는 기존에 사용되는 용어집을 채택하는 것을 선호한다. 왜냐하면 (i) 많은 용어집이 이미 공동체의 관찰 데이터에 사용되어 왔으며 (ii) 용어집의 구성 및 유지 관리가 복잡하여 오랜 기간 동안 많은 이해관계자의 의견을 수렴해야 하기 때문이다. 이러한 이유로, 전담 조직은 생성, 사용 중단, 병합 및 분할의 수명 주기에 따라 용어집을 제공하고 있다. (\@ref(conceptLifeCycle)절 참조) 현재 OHDSI는 Type Concepts (예를 들어, condition type concepts)과 같은 내부 관리 용어만 생성하고 있다. 유일한 예외는 RxNorm Extension인데, RxNorm Extension은 미국 이외의 지역에서만 사용되는 약물 용어집이다. (\@ref(rxNormExtension)절 참조)
+OHDSI は一般的に、(i)多くの用語集が既にコミュニティの観察データに利用されていること、(ii)用語集の構築と維持は複雑であり、成熟するまでに長い期間をかけて多くの利害関係者の意見を必要とするため、一から構築するよりも既存の用語集を採用することを選びました。専門組織が提供する用語集は、生成、非推奨、マージ、分割というライフサイクルを経ています（セクション \@ref(conceptLifeCycle)）。現在のところ、OHDSI は、型概念(Type Concepts)（例えば、症状型概念）のような内部管理用用語集のみを作成しています。唯一の例外は、米国外でのみ使用される薬剤をカバーする語彙であるRxNorm Extensionです（セクション\@ref(rxNormExtension)参照）。
 
-## Concept
+## Concepts
 
-OMOP CDM의 모든 임상 사건들은 concept으로 표현되며, 이는 각 사건의 의미 있는 concept을 나타낸다. Concept은 데이터 기록들의 기본적인 구성 요소로써, 모든 테이블을 거의 예외 없이 완전 정규화한다. Concept은 CONCEPT table에 저장된다. (그림 \@ref(fig:concept) 참조) \index{concept}
-
-```{r concept, fig.cap='OMOP CDM에서 vocabulary의 표준 표현. 위의 예는 심방세동의 SNOMED 코드에 대한 CONCEPT 테이블 레코드이다.',echo=FALSE, out.width='90%', fig.align='center'}
+OMOP CDM のすべての臨床イベントは概念(Concept)を使って表現されます。これらの概念は各イベントの意味的な概念を表します。これらはデータレコードの基本的な構成要素であり、テーブルは少数の例外を除いて完全に正規化されています。概念は CONCEPT テーブルに格納されます (図参照\@ref(fig:concept))。\index{concept}
+  
+```{r concept, fig.cap='OMOP CDMにおける用語の概念の標準的表現。この例は、心房細動のSNOMEDコードに対応するCONCEPTテーブルのレコードです。',echo=FALSE, out.width='90%', fig.align='center'}
 knitr::include_graphics("images/StandardizedVocabularies/concept.png")
-``` 
+```  
 
-이 시스템은 포괄적이지 않으면 안 된다. 즉, 환자의 의료 경험 (예를 들어, 진단명, 시술, 약물 노출 등) 및 의료시스템의 일부 관리 정보 (예를 들어, 병원 방문, 관리 부위 등) 과 관련된 모든 이벤트를 포괄할 만큼 충분히 많은 concept이 있어야 한다.
+この体系は、**包括的**であることを意図しています。すなわち、患者の健康管理に関連するあらゆる事象（例えば、状態、処置、薬剤への曝露など）をカバーするのに十分な概念があるだけでなく、医療情報システムの管理情報の一部（例えば、来院、治療場所など）をカバーするのに十分な概念があります。
 
 ### Concept IDs
 
-각각의 concept ID는 Concept ID를 기본 키로 할당한다. 이 무의미한 정수 ID는, 단어의 원 코드보다는 CDM 이벤트 테이블에 데이터를 기록하는 데 사용된다.
+各概念には、主キーとして使用する概念ID(concept ID)が割り当てられています。IDは意味を持たない整数値であり、元の用語集におけるコードではありません。概念IDはCDMイベントテーブルにデータを記録するために使用されます。 \index{concept!identifier}
 
-### Concept 이름
+### Concept Names
 
-각 concept에는 하나의 이름이 있다. 그 이름은 항상 영어로 되어있다. concept들은 용어집의 source로부터 가져온다. source vocabulary에 둘 이상의 이름을 가지고 있으면, 가장 표현력이 높은 이름이 선택되고, 나머지 이름은 동일한 CONCEPT_KEY로 CONCEPT_SYNONYM 테이블에 저장된다. 영어 이외의 이름은 CONCEPT_SYNONYM에 기록되며, 적합한 language concept ID가 LANGUAGE_CONCEPT_ID 필드에 기록된다. 이름은 255자까지의 길이를 가지는데, 너무 긴 이름은 잘라내고 최대 1,000자까지 저장 가능한 다른 이름의 동의어로 기록된다. 
+それぞれの概念には一つの名前がついています。名前は常に英語です。それらは用語のソースからインポートされます。元の用語に複数の名前がある場合、最も表現力の高いものが選択され、残りの名前は同じCONCEPT_IDキーの下にCONCEPT_SYNONYMテーブルに保存されます。英語以外の名前も同様にCONCEPT_SYNONYMに記録され、LANGUAGE_CONCEPT_IDフィールドに適切な言語概念IDが割り当てられます。名前の長さは255文字で、非常に長い名前は切り捨てられ、完全な長さのものは1000文字までの別のシノニムとして記録されます。
 
-### 도메인 {#conceptDomains}
+### Domains {#conceptDomains}
 
-각 concept에는 DOMAIN_ID가 필드에 할당되는데, 숫자 CONCEPT_ID와 달리 도메인의 대소문자를 구분하면서 길이가 짧은 고유한 영 숫자 ID이다. 이러한 각 도메인의 예로는 "Condition", "Drug", "Procedure", "Visit", "Device", "Specimen" 등이 있다. 모호하거나 pre-coordinated(combination) concepts의 경우 combination 도메인에 속할 수 있으나, 표준 concept은 (\@ref(standardConcepts)절 참조) 항상 단일 도메인에 할당된다. 도메인은 또한 어떤 임상 사건 또는 임상 속성 등이 어떤 CDM 테이블과 필드에 기록되어야 하는지 알려준다.
-도메인 할당은 [Pallas](https://github.com/ohDSI/vocabulary-v5.0) 내에 경험적 지식을 이용한 용어 수집 중에 수행되는 OMOP 고유의 특징이다. Source vocabularies는 서로 다른 도메인들이 함께 혼재되어 있는 경우가 많으나, 그 정도는 각기 다르다 (그림\@ref(fig:domains) 참조). \index{domain!concept}
+各概念は、DOMAIN_IDフィールドにドメインが割り当てられます。DOMAIN_IDは、数値のCONCEPT_IDとは対照的に、ドメインのための短い大文字小文字を区別するユニークな英数字のIDです。このようなドメイン識別子の例として、"Condition"、"Drug"、"Procedure"、"Visit"、"Device"、"Specimen "などがあります。曖昧な概念又は事前に調整された（組み合わせた）概念は、組み合わせドメインに属することができるが、標準概念（セクション\@ref(standardConcepts)参照）には、常に単一ドメインが割り当てられます。ドメインはまた、臨床事象や事象属性がどの CDM テーブルやフィールドに記録されるかを指示します。
+ドメインの割り当ては、OMOP固有の機能として、[Pallas](https://github.com/ohDSI/vocabulary-v5.0)で示されているヒューリスティックな手法を用いて、用語の取り込み中に行われます。ソース用語集は、程度の差はあれ、複数のドメインのコードを組み合わせることがあります(図\@ref(fig:domains))。\index{domain!concept}
 
-```{r domains, fig.cap='시술 용어인 CPT4와 HCPCS의 도메인 할당 비율. 직관적으론, 이러한 용어집은 한 도메인의 코드와 concept을 포함하고 있어야 하지만, 실제로는 여러 도메인들이 혼재되어있다.',echo=FALSE, out.width='70%', fig.align='center'}
+```{r domains, fig.cap='DPT4とHCPCSの処置用語集におけるドメインの割り当て。直感的には、これらの用語集には単一のドメインのコードと概念が含まれているはずですが、実際には混在しています.
+',echo=FALSE, out.width='70%', fig.align='center'}
 knitr::include_graphics("images/StandardizedVocabularies/domains.png")
-``` 
+```  
 
-경험적 지식을 이용한 도메인 할당 방법은 도메인의 정의를 따라 진행한다.
-이러한 정의는 CDM의 테이블 및 필드 정의에서 파생된다 (\@ref(CommonDataModel)장 참조). 경험적 지식은 완벽하지 않으며, 불분명하다 (\@ref(specialSituations)절의 "Special Situations" 참조). 만일, 잘못 지정된 concept 도메인을 발견한다면, [Forums](https://forums.ohdsi.org) 또는 [CDM issue](https://github.com/OHDSI/CommonDataModel/issues) 게시판을 통하여, 문제점을 보고하고 개선하도록 해야 한다.
+ドメインのヒューリスティックはドメインの定義に従います。これらの定義は、CDMのテーブルとフィールドの定義から導き出されます(Chapter \@ref(CommonDataModel)を参照)。ヒューリスティックは完全ではありません。グレーゾーンがあります(セクション\@ref(specialSituations) "Special Situations "を参照)。概念ドメインの割り当てが間違っているのを見つけた場合は、[Forums](https://forums.ohdsi.org) または [CDM issue](https://github.com/OHDSI/CommonDataModel/issues) に投稿して、プロセスを改善するために報告してください。
 
-### 용어집 (Vocabularies)
+### Vocabularies
 
-각 용어집에는 대소문자를 구분하는 고유한 영 숫자 ID가 있으며, 일반적으로 용어집의 약어 이름을 쓰고, 대시는 생략한다. 예를 들자면, ICD-9-CM의 용어 ID는 "ICD9CM" 이다. 현재 OHDSI가 지원하는 용어집은 11개로, 그중 78개가 외부 source에서 채택되었고, 나머지는 OMOP 내부 용어집이다. 이러한 용어는 일반적으로 분기별 일정에 따라 갱신된다. 용어집의 버전은 VOCABULARY reference file에 따라 정의되어 있다. \index{vocabulary}
+各用語集のIDは、用語集の略称の後に続く短い大文字小文字を区別するユニークな英数字のIDを持ち、ダッシュは省略されています。例えば、ICD-9-CMは "ICD9CM "という用語IDを持っています。現在OHDSIがサポートしている用語集は111種類で、そのうち78種類は外部からの採用であり、残りはOMOPの内部用語集です。これらの用語集は通常、四半期ごとに更新されます。これらの用語集の出典とバージョンは、VOCABULARY参照ファイルで定義されています。\index{vocabulary}.
 
-### Concept 계층 (Concept Classes)
+### Concept Classes
 
-일부 용어집은 대소문자를 구분하는 고유한 영 숫자 ID를 통해 표현되는 코드나 concept을 분류한다. 예를 들어, SNOMED에는 "semantic tag"라고 불리는 33가지 concept 계층을 가지고 있다: "clinical finding", social context, body structure 등 concept 계층은 concept들의 수직적 구분을 말한다. MedDRA 또는 RxNorm과 같은 다른 concept들은 계층화된 계급 내에서 수평적인 수준에서 분류하는 concept 계층들을 가지고 있다. HCPCS와 같이 concept 계층이 없는 용어들은 Concept Class ID를 vocabulary ID로 사용해야 한다. \index{concept!class}
+一部の用語集では、コードや概念を分類しており、大文字小文字を区別するユニークな英数字のIDで示されている。例えば、SNOMEDには臨床所見、社会的背景、身体構造などの33の概念クラスがあり、SNOMEDでは「意味タグ(semantic tags)」と呼んでいます。これらは概念群を縦割りで分類するものです。MedDRAやRxNormのような概念クラスは、階層化された階層の中で水平方向に分類しています。HCPCS のように概念クラスを持たない用語は、用語ID を概念クラスIDとみなします。\index{concept!class}
 
-Table: (\#tab:sublassification)concept 계층에서 수평 및 수직 하위분류 원칙에 따른 용어집들
+Table: (\#tab:sublassification) 概念クラスにおける分類手法
 
-Concept class subdivision principle |	Vocabulary
-:-------- |:----------------------------------
-Horizontal | all drug vocabularies, ATC, CDТ, Episode, HCPCS, HemOnc, ICDs, MedDRA, OSM, Census 
-Vertical | CIEL, HES Specialty, ICDO3, MeSH, NAACCR, NDFRT, OPCS4, PCORNET, Plan, PPI, Provider, SNOMED, SPL, UCUM 
-Mixed | CPT4, ISBT, LOINC
-None | APC, all Type Concepts, Ethnicity, OXMIS, Race, Revenue Code, Sponsor, Supplier, UB04s, Visit 
+|Concept class subdivision principle |	Vocabulary
+|:-------- |:----------------------------------
+|Horizontal | 全ての医薬品の用語集, ATC, CDТ, Episode, HCPCS, HemOnc, ICDs, MedDRA, OSM, Census 
+|Vertical | CIEL, HES Specialty, ICDO3, MeSH, NAACCR, NDFRT, OPCS4, PCORNET, Plan, PPI, Provider, SNOMED, SPL, UCUM 
+|Mixed | CPT4, ISBT, LOINC
+|None | APC, all Type Concepts, Ethnicity, OXMIS, Race, Revenue Code, Sponsor, Supplier, UB04s, Visit    
 
-수평적 concept 계층을 사용하면 특정 계층 수준을 지정할 수 있게 해준다. 예를 들어, 약물 용어의 RxNorm에서 "Ingredient" concept 계층은 최상위층 계급 레벨을 정의한다. 수직적 모델에서 concept 계층 요소들은 최상위에서 맨 아래까지 모든 계급 중의 하나일 수 있다.
+水平に分類される概念クラスでは、特定の階層レベルを決定することができます。例えば、医薬品の用語集であるRxNormでは、概念クラス" Ingredient "は階層の最上位レベルを定義します。垂直分類モデルでは、概念クラスのメンバーは、上から下までの任意の階層レベルを持つことができます。
 
-### 표준 Concept {#standardConcepts}
+### Standard Concepts {#standardConcepts}
 
-각 임상 사건의 의미를 나타내는 하나의 concept을 표준 concept(Standard Concepts)이라고 부른다. 예를 들면, MESH 코드 D001281, CIEL 코드 148203, SNOMED 코드 49436004, ICD9CM 코드 427.31 및 Read 코드 G573000은 모두 condition 도메인에서 "심방세동 atrial fibrillation"을 정의하지만, condition 데이터에서는 SNOMED의 concept만이 표준이고 그 데이터에서 질환을 나타낸다. 나머지는 비표준 concept 또는 원천 concept(source concepts)으로 지정되고, 표준 concept에 매핑이 된다. 표준 concept은 STANDARD_CONCEPT 필드에 "S"라고 표시한다. 그리고 이러한 표준concept만이 "_CONCEPT_ID"로 끝나는 CDM 필드에 데이터를 기록하는 데 사용된다. \index{standard concept}
+各々の臨床事象に関して、（候補としての数ある概念の中から）一つの概念が標準概念として選ばれます。例えば、MESHコードD001281、CIELコード148203、SNOMEDコード49436004、ICD9CMコード427.31、ReadコードG573000は、すべて症状ドメインにおいて「心房細動」を定義していますが、SNOMEDの概念だけが標準概念として採用され、データの中で症状を表すのに使われます。他の概念は非標準概念またはソース概念とされ、標準概念へマッピングされます。標準概念は、STANDARD_CONCEPTフィールドの "S "によって示されます。そして、"_CONCEPT_ID "で終わるCDMフィールドにデータを記録するためには、これらの標準概念のみが使用されます。\index{standard concept}
 
-### 비표준 Concept
+### Non-Standard Concepts
 
-비표준 concept(Non-Standard Concepts)은 임상사건을 나타내는데 사용되지 않으나, 여전히 표준 용어집의 일부를 구성하고 소스데이터에서 흔히 발견된다. 이런 이유로, 그것들은 "source concepts"라고 부른다. source concepts을 표준 concept으로 변환하는 과정을 "매핑 mapping"이라고 부른다 (\@ref(conceptMapping)절 참조). 비표준 concept은 STANDARD_CONCEPT 필드에 값이 없다(NULL).
+非標準概念は臨床事象の表現には使用されないが、標準化語彙の一部であることに変わりはなく、またソースデータに多く見られます。そのため、「ソース概念(source concepts)」とも呼ばれます。ソース概念の標準概念への変換は、「マッピング」と呼ばれるプロセスです（セクション\@ref(conceptMapping)参照）。STANDARD_CONCEPTフィールドでは、非標準概念には値がありません（NULL）。
 
-### 분류 Concept
+### Classification Concepts
 
-분류 concept(Classification Concepts)은 표준이 아니므로 데이터를 나타내는데 사용할 수 없다. 하지만 표준 concept과 어울러져 계층 구조를 나타냄으로서, 계층 쿼리(hierarchical queries)를 수행하는데 사용할 수 있다. 예를 들어, MedDRA 코드 10037908의 모든 하위 항목에 대한 쿼리를 사용하면 (MedDRA license를 받지 않는 사용자에게는 보이지 않음, \@ref(accessVocabularies)절 액세스 제한 참조) 심방세동 atrial Fibrillation에 대한 표준  SNOMED concept이 검색된다. (CONCEPT_ANCESTOR 테이블을 사용한 계층 쿼리는 \@ref(conceptAncestor)절 참조) - 그림 \@ref(fig:hierarchy) 참조. \index{classification concept}
+これらの概念は標準概念ではないので、データを表現するために使用することはできません。しかし、これらの概念は標準概念と一緒に階層を構成していますので、階層的なクエリを実行するために使用できます。例えば、MedDRA コード 10037908 の全ての子孫（MedDRA ライセンスを取得していないユーザーには表示されません。アクセス制限についてはセクション　\@ref(accessVocabularies)を確認下さい。）は、心房細動のための標準的なSNOMEDコンセプトを取得します（CONCEPT_ANCESTORテーブルを使用した階層的なクエリについては、セクション\@ref(conceptAncestor)を参照してください） - Figure ＠ref(fig:hierarchy)を参照してください。\index{classification concept}
 
-```{r hierarchy, fig.cap='Standard, non-standard source 및 분류 concept 및 condition 도메인에서의 계층적 관계. SNOMED는 대부분 standard condition concepts (일부 ICDO3에서 파생된 종양학 관련 concept) 에 사용되고, MedDRA concept은 계층 분류 concept에 사용되며, 그 외 다른 모든 용어집은 비표준 concept이나 혹은 계층 구조에 포함되지 않는 원천 concept을 가지고 있다.',echo=FALSE, out.width='100%', fig.align='center'}
+```{r hierarchy, fig.cap='症状ドメインにおける標準概念、非標準概念またソース概念、および分類概念とその階層的な関係について。ほとんどの標準的な症状概念にはSNOMEDが使用されます（ICDO3に由来するいくつかの腫瘍関連概念を含む）。階層的な分類概念にはMedDRAの概念が使用されます。他のすべての用語集には階層に参加しない非標準またはソース概念が含まれている。',echo=FALSE, out.width='100%', fig.align='center'}
 knitr::include_graphics("images/StandardizedVocabularies/hierarchy.png")
-``` 
+```  
 
-concept을 표준, 비표준 및 분류 concept 중 어디로 지정할지 선택할 때, 각 도메인 용어 수준에서 개별적으로 시행한다. 이는 concept의 질, 내장된 계층구조 및 그 용어가 선언된 목적에 따라 행해진다. 또한, 한 용어집의 모든 concept이 표준 concept으로 사용되는 것은 아니다. 어디로 지정할지는 각 도메인마다 분리되어 있고, 각 concept은 유효해야 하며 (\@ref(conceptLifeCycle)절 참조), 다른 용어집에서 하나 이상의 concept이 같은 의미로 경쟁하는 경우 우선순위가 있을 수 있다. 다른 말로 하면, 그런 경우에는 표준 용어집은 존재하지 않는다. 예는 표 \@ref(tab:vocabList)를 참고하기 바란다.
+標準概念、非標準概念、分類概念の選択は、通常、用語集レベルで各ドメインごとに個別に行われます。これは、概念の質、組み込まれている階層、用語が定義された目的に基づいて行われます。また、用語のすべての概念が標準概念として使用されるわけではありません。概念の指定はドメインごとに分かれていて、それぞれの概念はアクティブでなければならず（セクション\@ref(conceptLifeCycle)参照）、異なる用語集における複数の概念が同じ意味で競合している場合には、優先順位があるかもしれません。つまり、「標準用語集」というものは存在しないのです。例としては、表の\@ref(tab:vocabList)を参照してください。
 
-Table: (\#tab:vocabList) 표준, 비표준 및 분류 concept 할당에 활용할 용어집 목록 
+Table: (\#tab:vocabList) 標準/非標準/分類 概念の割り当てに使用される用語のリスト 
 
-도메인 | 표준 concept | 원천 concept | 분류 concept
-:-------- |:--------------- |:--------------- |:-------------
-Condition | SNOMED, ICDO3 | SNOMED Veterinary | MedDRA
-Procedure | SNOMED, CPT4, HCPCS, ICD10PCS, ICD9Proc, OPCS4 | SNOMED Veterinary, HemOnc, NAACCR | 현재까지 없음
-Measurement | SNOMED, LOINC | SNOMED Veterinary, NAACCR, CPT4, HCPCS, OPCS4, PPI | 현재까지 없음
-Drug | RxNorm, RxNorm Extension, CVX | HCPCS, CPT4, HemOnc, NAAACCR | ATC
-Device | SNOMED | Others, currently not normalized | 현재까지 없음
-Observation | SNOMED | Others | 현재까지 없음
-Visit | CMS Place of Service, ABMT, NUCC | SNOMED, HCPCS, CPT4, UB04 | 현재까지 없음
+|Domain | 標準概念への使用 | ソース概念への使用 | 分類概念への使用
+|:-------- |:--------------- |:--------------- |:-------------
+|Condition | SNOMED, ICDO3 | SNOMED Veterinary | MedDRA
+|Procedure | SNOMED, CPT4, HCPCS, ICD10PCS, ICD9Proc, OPCS4 | SNOMED Veterinary, HemOnc, NAACCR | None at this point
+|Measurement | SNOMED, LOINC | SNOMED Veterinary, NAACCR, CPT4, HCPCS, OPCS4, PPI | None at this point
+|Drug | RxNorm, RxNorm Extension, CVX | HCPCS, CPT4, HemOnc, NAAACCR | ATC
+|Device | SNOMED | Others, currently not normalized | None at this point
+|Observation | SNOMED | Others | None at this point
+|Visit | CMS Place of Service, ABMT, NUCC | SNOMED, HCPCS, CPT4, UB04 | None at this point
 
-### Concept 코드
+### Concept Codes
 
-concept 코드(Concept Codes)는 원천 용어집 내에서 사용하는 식별자이다. 예를 들어, ICD9CM 또는 NDC 코드는 해당 필드(concept 코드)에 저장되는데, OMOP 테이블은 concept ID를 CONCEPT 테이블에 foreign key로 사용을 한다. 그 이유는, 네임 스페이스가 용어집에 걸쳐 겹치기 때문이고, 동일한 코드가 완전히 다른 의미로 다른 용어에 존재할 수 있기 때문이다. (역자 주: concept 코드는 한 용어집 내에서 유일한 코드로 사용되지만, 같은 코드가 다른 용어집에서 나타날 수 있으나 다른 의미로 사용될 수 있다) (표 \@ref(tab:code1001)참조) \index{concept!code}
+ICD9CMやNDCコードはこのフィールドに格納されるが、OMOPテーブルはCONCEPTテーブルへの外部キーとして概念IDを使用する。その理由は、名前空間が用語集間で重複していること、すなわち、同じコードが全く異なる意味を持つ異なる用語集に存在する可能性があるからである（表参照：表 \@ref(tab:code1001) \index{concept!code}
 
-Table: (\#tab:code1001) 같은 concept 코드 1001이 다른 용어집에서 다른 도메인, 다른 concept classes로 사용된다.
+Table: (\#tab:code1001) 同一の概念コード1001を持つが、用語集、ドメイン、概念クラスが異なる概念
 
-Concept ID | Concept Code | Concept Name | Domain ID | Vocabulary ID | Concept Class
-:--------- |:---- |:------------ |:---------- |:---------- |:---------- 
-35803438 | 1001 | Granulocyte colony-stimulating factors | Drug | HemOnc | Component Class
-35942070 | 1001 | AJCC TNM Clin T | Measurement | NAACCR | NAACCR Variable
-1036059 | 1001 | Antipyrine | Drug | RxNorm | Ingredient
-38003544 | 1001 | Residential Treatment - Psychiatric | Revenue Code | Revenue Code | Revenue Code
-43228317 | 1001 | Aceprometazine maleate | Drug | BDPM | Ingredient
-45417187 | 1001 | Brompheniramine Maleate, 10 mg/mL injectable solution | Drug | Multum | Multum
-45912144 | 1001 | Serum | Specimen | CIEL | Specimen
+|概念ID | 概念コード | 概念名称 | ドメインID | 用語集ID | 概念クラス
+|:--------- |:---- |:------------ |:---------- |:---------- |:---------- 
+|35803438 | 1001 | Granulocyte colony-stimulating factors | Drug | HemOnc | Component Class
+|35942070 | 1001 | AJCC TNM Clin T | Measurement | NAACCR | NAACCR Variable
+|1036059 | 1001 | Antipyrine | Drug | RxNorm | Ingredient
+|38003544 | 1001 | Residential Treatment - Psychiatric | Revenue Code | Revenue Code | Revenue Code
+|43228317 | 1001 | Aceprometazine maleate | Drug | BDPM | Ingredient
+|45417187 | 1001 | Brompheniramine Maleate, 10 mg/mL injectable solution | Drug | Multum | Multum
+|45912144 | 1001 | Serum | Specimen | CIEL | Specimen
 
-### 수명 주기 {#conceptLifeCycle}
+### Life-Cycle {#conceptLifeCycle}
 
-용어집이 영원불변의 고정된 코드 세트인 경우는 드물다. 오히려, 코드와 concept이 더해지며 꾸준히 수정된다. OMOP CDM은 장기에 걸친 환자 데이터를 지원하기 위한 모델이므로, 과거에 사용되었지만, 지금은 더 이상 사용되지 않는 concept들을 지원해야 할 뿐 아니라, 신설된 concept을 더하여 상황에 맞게 지원해야 한다. CONCEPT 테이블에는 사용 가능한 수명 주기 상태를 설명하는 세 개의 필드가 있다: VALID_START_DATE, VALID_END_DATE, INVALID_REASON
-그 값들은 각 concept의 수명 주기 상태에 따라 달라진다.
+Vocabularies are rarely permanent corpora with a fixed set of codes. Instead, codes and concepts are added and get deprecated. The OMOP CDM is a model to support longitudinal patient data, which means it needs to support concepts that were used in the past and might no longer be active, as well as supporting new concepts and placing them into context. There are three fields in the CONCEPT table that describe the possible life-cycle statuses: VALID_START_DATE, VALID_END_DATE, and INVALID_REASON. Their values differ depending on the concept life-cycle status:
 
-- **유효한 concept 및 새로운 concept**
-	- 설명: 사용 중인 concept.
-	- VALID_START_DATE: concept이 사용되기 시작한 날, 용어집에 concept을 통합한 날을 알지 못하거나, 알려지지 않은 경우 1970-1-1.
-	- VALID_END_DATE: "지금은 활성화되어 있으나, 추후에는 무효가 될 수가 있음."을 나타내는 규칙으로 2099-12-31을 설정.
+用語集は、固定されたコードのセットを持つ永続的なコーパスであることはほとんどありません。その代わり、コードや概念は追加され、古いものは非推奨となります。OMOP CDMは縦断的な患者データをサポートするためのモデルであり、過去に使用されていた概念もサポートする必要があります。そして、新しい概念をサポートし、これまでのデータに対して適用する必要があることを意味しています。CONCEPTテーブルには、ライフサイクル・ステータスを記述する3つのフィールドがあります。VALID_START_DATE、VALID_END_DATE、INVALID_REASONです。これらの値は、概念のライフサイクル・ステータスによって変わります。
+
+- **Active or new concept**
+	- 説明: 現在使用されている
+	- VALID_START_DATE: 概念のインスタンスが作成された日。用語集に当該概念が組み込まれた日が不明な場合は、1970-1-1を指定します。
+	- VALID_END_DATE: 未定義の未来には無効になるかもしれないが、今は有効である "ことを示す慣例として、2099-12-31に設定します。
 	- INVALID_REASON: NULL
-- **후속 코드 없이 더 이상 사용되지 않는 concept**
-	- 설명: concept이 비활성화 상태여서 표준으로 사용할 수 없다. (\@ref(standardConcepts)절 참조)
-	- VALID_START_DATE: concept이 사용되기 시작한 날, 용어집에 concept을 통합한 날을 알지 못하거나, 알려지지 않은 경우 1970-1-1. 
-	- VALID_END_DATE: 사용 중단을 나타내는 과거의 날짜, 또는 해당 날짜를 알 수 없는 경우, concept이 누락되거나 비활성화된 용어집 갱신일 
+- **Deprecated Concept with no successor**
+	- 説明:  概念は非アクティブであり、標準概念として使用することはできません(セクション\@ref(standardConcepts)参照).
+	- VALID_START_DATE: 概念のインスタンスが作成された日。用語集に当該概念が組み込まれた日が不明な場合は、1970-1-1を指定します。
+	- VALID_END_DATE:  非推奨になった過去の日、不明な場合は用語集から当該概念が削除された、あるいは非アクティブに設定された時の用語集の更新日
 	- INVALID_REASON: "D"
-- **후속 코드가 있는 업그레이드 된 concept**
-	- 설명: 비활성이지만, 후속 코드가 정의된 concept. 이들은 일반적으로 중복 제거를 통해 제거된 concept.
-	- VALID_START_DATE: concept이 사용되기 시작한 날, 용어집에 concept을 통합한 날을 알지 못하거나, 알려지지 않은 경우 1970-1-1. 
-	- VALID_END_DATE: 업그레이드를 나타내는 과거의 날짜, 또는 해당 날짜를 알 수 없는 경우, 업그레이드가 추가된 용어집 갱신일
+- **Upgraded Concept with successor**
+	- 説明: 概念は非アクティブですが、後継者が定義されています。これらは典型的には重複排除が行われた概念です。
+	- VALID_START_DATE: 概念のインスタンスが作成された日。用語集に当該概念が組み込まれた日が不明な場合は、1970-1-1を指定します。
+	- VALID_END_DATE: アップグレードがあった過去の日付。不明な場合は当該概念がアップグレードされた概念が含まれた時の用語集の更新日
 	- INVALID_REASON: "U"
-- **다른 새로운 concept에 대한 재사용 코드**
-	- 설명: 용어집은 새로운 concept을 위해 없어진 concept의 concept 코드를 재사용했다.
-	- VALID_START_DATE: concept이 사용되기 시작한 날, 용어집에 concept을 통합한 날을 알지 못하거나, 알려지지 않은 경우 1970-1-1.  
-	- VALID_END_DATE: 사용 중단을 나타내는 과거의 날짜, 또는 해당 날짜를 알 수 없는 경우, concept이 누락되거나 비활성화로 설정된 용어집 갱신일
+- **Reused code for another new concept**
+	- 説明: この用語はこの非推奨概念の概念コードを新しい概念に再利用しました。
+	- VALID_START_DATE: 概念のインスタンスが作成された日。用語集に当該概念が組み込まれた日が不明な場合は、1970-1-1を指定します。
+	- VALID_END_DATE: 非推奨となった過去の日付。不明な場合は当該概念が削除されたか非アクティブに設定されたときの用語集の更新日
 	- INVALID_REASON: "R"
-	
-일반적으로 concept 코드는 재사용하지 않는다. 하지만 이 규칙에서 벗어나는 몇몇 용어집으로 HCPCS, NDC, DRG가 있다. 그들 용어집에서는 동일한 concept 코드가 같은 용어집 내에서 하나 이상의 concept에 사용된다. 그들의 CONCEPT_ID 값은 고유값을 유지한다. 재사용된 concept 코드는 INVALID_REASON 필드에 "R"로 표시되며 VALID_START_DATE 부터 VALID_END_DATE 까지의 기간을 이용하여 concept 코드는 같지만 서로 다른 concept을 구별하는데 사용해야 한다.
 
-## 관계 Relationships
+一般に、概念コードは再利用されることはありません。しかし、この規則から逸脱したいくつかの用語集、特に HCPCS、NDC 及び DRG がある。これらの用語集では、同じ概念コードが同じ用語集の複数の概念に現れます。それらのCONCEPT_ID値は一意のままです。これらの再利用された概念コードはINVALID_REASONフィールドに "R "でマークされ、VALID_START_DATEからVALID_END_DATEまでの期間は、同じ概念コードを持つ概念から区別されるようにするべきです。
 
-두 concept이 동일한 도메인 또는 용어집에 속하는지 여부와 관계없이 두 concept은 지정된 관계를 맺을 수 있다. 관계의 특성은 CONCPET_RELATIONSHIP 테이블의 RELATIONSHIP_ID 필드에서 대소문자를 구분하는 고유한 짧은 영 숫자 ID로 표시한다. 각 관계에 대해서 전후가 바뀐 대칭 관계가 존재하며, CONCEPT_ID_1, CONCEPT_ID_2 필드의 내용이 교환되고, RELATIONSHIP_ID는 반대로 바뀌게 된다. 예를 들어, "Maps to" 관계는 "Mapped from"과 반대의 관계를 갖는다. \index{concept!relationship}
+## Relationships
+
+とある2つの概念間において、2つの概念が同じドメインや用語集に属するかどうかに関係なく、関係を定義することができます。関係の性質は、CONCEPT_RELATIONSHIPテーブルのRELATIONSHIP_IDフィールドの短い大文字小文字を区別するユニークな英数字IDで指定されます。関係性は対称性があります。すなわち、各関係性に対して、CONCEPT_ID_1とCONCEPT_ID_2のフィールドの内容が入れ替わり、RELATIONSHIP_IDは反対の関係性のものにセットされます。例えば、"Maps to "関係性で定義された2つの概念は、順番を入れ替えて反対の関係性である "Mapped from "で定義されます。\index{concept!relationship}
  
-CONCEPT_RELATIONSHIP 테이블 레코드에는 수명 주기 필드인 RELATIONSHIP_START_DATE, RELATIONSHIP_END_DATE, INVALID_REASON이 있다. 그러나, INVALID_REASON = NULL인 유효한 기록들만 ATHENA에서 이용할 수 있다. 비활성화된 관계는 Pallas 시스템 내에서 내부처리 용도로만 사용되도록 보관된다. RELATIONSHIP 테이블은 전체 relationship IDs 목록 및 그 반대의 목록과 함께 참조로 사용된다.
+ CONCEPT_RELATIONSHIPテーブルのレコードは、ライフサイクルのフィールドであるRELATIONSHIP_START_DATE、RELATIONSHIP_END_DATE、INVALID_REASONも持っています。しかし、ATHENAを通じて利用できるのは、INVALID_REASON = NULLを持つアクティブなレコードのみです。非アクティブな関係性は内部処理のためだけにPallasシステムに保持されます。RELATIONSHIPテーブルは、関係性IDの完全なリストとその逆の対応を持つリファレンスとして機能します。
 
-### 매핑 관계 Mapping Relationships {#conceptMapping}
+### Mapping Relationships {#conceptMapping}
 
-이러한 관계는 두 개의 relationship ID 쌍을 이용하여 비표준화 concept에서 표준concept으로 변환 하게 해준다. (표 \@ref(tab:mappingRelationships) 참조). \index{concept!mapping}
+これらの関係性は、非標準概念から標準概念へのマッピングを提供し、2つの関係性IDのペアでサポートされています(表 \@ref(tab:mappingRelationships) 参照)。\index{concept!mapping}
 
-Table: (\#tab:mappingRelationships) 매핑관계의 유형.
+Table: (\#tab:mappingRelationships) マッピング関係性の種類
 
-Relationship ID pair | Purpose
-:------------- | :----------------------------------------------------
-"Maps to" and "Mapped from" | 표준 concept에 매핑. 표준 concept은 자기 자신에게 매핑되고, 비표준 concept은 표준 concept으로 매핑된다. 대부분의 비표준 concept과 모든 표준 concept들은 한 표준 concept과 이러한 관계를 맺는다. 비표준 concept은 *_SOURCE_CONCEPT_ID에 저장되고 표준 concept은 * _CONCEPT_ID 필드에 저장된다. 분류 concept(Classification concepts)은 매핑되지 않는다.
-"Maps to value" and "Value mapped from" | MEASUREMENT와 OBSERVATION 테이블의 VALUE_AS_CONCEPT_ID 필드에 배치할 값을 나타내는 concept에 Mapping.
+|関係性IDペア | 目的
+|:------------- | :----------------------------------------------------
+|"Maps to" and "Mapped from" | 標準概念はそれ自身に、非標準概念は標準概念にマッピングされます。ほとんどの非標準概念とすべての標準概念は、標準概念とこの関係を持っています。前者は*_SOURCE_CONCEPT_IDフィールドに、後者は*_CONCEPT_IDフィールドに格納されます。分類概念はマッピングされません。
+|"Maps to value" and "Value mapped from" | MEASUREMENTテーブルおよびOBSERVATIONテーブルのVALUE_AS_CONCEPT_IDフィールドに配置される値を表す概念へのマッピング。
+	
 
-이러한 매핑 관계를 사용하는 목적은 같은 concept간의 교차를 통해 OMOP CDM에서 임상 사건이 표현되는 방식을 조화롭게 해주는 것이다. 이는 표준화된 용어들이 이루어 낸 주요 성과이다.
+これらのマッピング関係性の目的は、OMOP CDM における臨床イベントの表現方法を調和させるために、等価な概念間のクロスウォークを可能にすることです。これは標準化用語集の主な成果です。
 
-"동등 concept(Equivalent concepts)"은 동일한 의미를 가지며, 중요한 것은 계층적으로 하위 concept(descendant)들이 동일한 의미론적 공간을 가진다. 동등concept을 사용할 수 없고, 그 concept이 표준이 아닌 경우, 그 concept은 약간 더 넓은 의미를 가진 concept으로 (소위, "uphill-mappings") 매핑된다. 예를 들어, ICD10CM W61.51 "Bitten by goose" 는 일반적으로 표준 condition concept에 사용되는 SNOMED 용어집에는 없다. 대신 SNOMED 217716004의 "Peck by bird"에 매핑되지만, 그 새가 거위라는 맥락을 잃게 된다. Up-hill 매핑은 정보가 유실돼도 표준 연구 사례들을 진행하는 데 문제없다고 간주할 때만 사용해야 한다. 
+"等価な概念 "とは、同じ意味を持つということです。重要なことは、階層的な子孫が同じ意味空間をカバーしていることを意味するということです。等価な概念が利用できず、その概念が標準化されていない場合でも、、少し広い概念にマッピング（いわゆる"up-hill"マッピング」）されます。例えば、ICD10CM W61.51 "Bitten by goose （ガチョウに噛まれた）"は、標準状態概念において一般的に使用されるSNOMED統制用語集には等価なものがありません。その代わりに、SNOMED 217716004 "Peck by bird (鳥につつかれた)"にマッピングされ、その鳥がガチョウであるという文脈が失われます。このような情報の損失が、標準的な研究のユースケースとは無関係であると考えられる場合にのみ、"up-hill"マッピングが使用されます。
 
-일부 매핑은 원천 concept을 둘 이상의 표준 concept에 연결한다. 예를 들어, ICD9CM의 070.43 "Hepatitis E with hepatic coma"는 SNOMED의 235867002 "Acute hepatitis E"뿐 아니라 SNOMED의 72836002 "Hepatic Coma" 에도 매핑되어 있다. 그 이유는 기존의 원천 concept이 간염 hepatitis와 혼스 coma라는 두 가지 조건의 선 조합 pre-coordinated이기 때문이다. SNOMED에는 해당 조합이 없음으로, ICD9CM 레코드에 기록된 두 개의 레코드 (각각 매핑된 표준 concept이 있는 레코드) 가 생성된다.
+いくつかのマッピングは、ソース概念を複数の標準概念に接続します。例えば、ICD9CM 070.43 "Hepatitis E with hepatic coma (肝性昏睡を伴うE型肝炎)"は、SNOMED 235867002 "Acute hepatitis E (急性E型肝炎)"とSNOMED 72836002 "Hepatic Coma (肝性昏睡)"の両方にマッピングされています。その理由は、元々のソース概念が、肝炎と昏睡という2つの症状がプリコーディネートされた組み合わせだからです。SNOMED にはその組み合わせがないため、ICD9CM レコードには 2 つのレコードが書き込まれ、それぞれにマッピングされた標準概念が 1 つずつ書き込まれることになります。
 
-"Maps to value" 관계는 Entity-Attribute-Value(EAV) 모델에 따라 OMOP CDM 테이블의 값을 나누기 위한 목적이 있다. 일반적으로 다음과 같은 경우이다:
+関係性 "値へのマップ("Maps to value") "は、実体-属性-値（EAV）モデルに従ったOMOP CDMテーブルの値の分割を目的としている。これは、以下のような状況で適用されます
 
-- 테스트와 결과값으로 구성된 측정값
-- 개인 또는 가족의 질병력
-- 물질에 대한 알레르기
-- 예방접종 필요
+- 検査と結果値から構成される検査結果
+- 個人または家族の病歴
+- 物質へのアレルギー
+- 予防接種の必要性
 
-이런 상황들에서 source concept은 속성(test or history)과 값(test result or disease)의 조합이다. "Maps to" 관계는 소스를 속성 concept에 매핑하고, "Maps to value" 관계는 value concept을 매핑한다. (예로 그림 \@ref(fig:conceptValue)참조)
+これらの状況では、ソース概念は、属性（検査または履歴）と値（検査結果または疾患）の組み合わせです。ソース概念は、Maps to"関係によって属性概念に、"Maps to value"関係によって値概念にマッピングされます。例として図の\@ref(fig:conceptValue)を参照してください。
 
-```{r conceptValue, fig.cap='원천 concept과 표준 concept 사이의 일대다 매핑. 선 조합 pre-coordinated concept은 두 가지 concept으로 나뉘는데, 하나는 속성(여기서는 임상 소견의 과거력)과 다른 하나는 값(소화성 궤양 peptic ulcer)이다. "Maps to" 관계는 measurement 또는 observation 도메인에 매핑되는 반면, "Maps to value" concept에는 도메인 제한이 없다.',echo=FALSE, out.width='100%', fig.align='center'}
+```{r conceptValue, fig.cap='ソース概念と標準概念の間の一対多のマッピング。プリコーディネートされた概念は2つの概念に分割され、1つは属性(ここでは臨床所見の履歴)で、もう1つは値(消化性潰瘍)です。"Maps to"関係は測定ドメインや観察ドメインの概念にマッピングしますが、"Maps to value"概念にはドメインの制限はありません。',echo=FALSE, out.width='100%', fig.align='center'}
 knitr::include_graphics("images/StandardizedVocabularies/conceptValue.png")
-``` 
+```  
 
-concept 매핑은 네트워크 연구를 수행하는 구성원들의 노력을 도와주는 지원과, 무료로 제공되는 OMOP 표준 용어집의 또 다른 핵심 기능이다. 매핑 관계는 외부 소스에서 파생되거나 용어팀에 의해 수작업으로 유지 관리된다. 이것은 용어팀이 완벽하지 않다는 것을 의미한다. 잘못되거나 이의가 있는 매핑 관계를 발견한 경우 [Forums](https://forums.ohdsi.org) 또는 [CDM issue](https://github.com/OHDSI/CommonDataModel/issues) 게시판을 통해 알려줘서 프로세스를 개선하도록 돕는 것이 중요하다.
+概念のマッピングは、無料で提供される OMOP標準用語集の中心的な機能の一つであり、ネットワーク研究を行うコミュニティの取り組みを支援しています。関係性のマッピングは外部のソースから導き出されたものであるか、用語集のチームが手動で管理しています。完全とは言えませんので、間違った関係性のマッピングを発見した場合、[フォーラム] (https://forums.ohdsi.org) や [CDM issue] (https://github.com/OHDSI/CommonDataModel/issues) に投稿して、プロセスを改善するための手助けをしてください。
 
-매핑 규칙에 대한 자세한 설명은 OHDSI Wiki에서 확인할 수 있다. [^vocabMappingUrl]
+マッピングの規約についてのより詳細な説明は OHDSI Wiki にあります。[^vocabMappingUrl]
 
 [^vocabMappingUrl]: https://www.ohdsi.org/web/wiki/doku.php?id=documentation:vocabulary:mapping
 
-### 계층적 관계 
+### Hierarchical Relationships
 
-계층을 나타내는 관계는 "Is a" – "Subsumes" 관계를 통해 정의된다. 계층적 관계는 자식 concept이 하나 이상의 추가 속성이나 더욱 정밀하게 정의된 속성에 더하여, 부모 concept의 모든 속성을 갖도록 정의된다. 예를 들어, SNOMED의 49436004 "심방세동 atrial fibrillation"은 "Is a" 관계를 통해 SNOMED의 17366009 "심방 부정맥 atrial arrhythmia"에 연결된다. 두 concept 모두 부정맥arrhythmia 형태를 제외하고 다른 속성은 동일하다, 즉, 한 concept에는 세동 fibrillation으로 정의되고, 다른 concept에서는 세동으로 정의되지 않는다. concept에는 둘 이상의 부모와 둘 이상의 자식 concept이 있을 수 있다. 이 예에서는, SNOMED의 49436004 "심방세동 atrial fibrillation"은 SNOMED의 40593004 "세동 fibrillation"과도 "Is-a" 관계를 가진다. \index{concept!hierarchy}
+階層を示す関係は、"Is a"-"Subsumes"の関係性ペアによって定義されます。階層関係は、子概念が親概念のすべての属性に加えて、1 つ以上の追加属性またはより正確に定義された属性を持つように定義されます。例えば、SNOMED 49436004「心房細動」は、SNOMED 17366009「心房性不整脈」と「Is a」の関係で関連しています。両方の概念は、不整脈のタイプを除き、同じ属性を持っています。概念は、複数の親概念と複数の子概念を持つことができます。この例では、SNOMED 49436004 「心房細動」は、SNOMED 40593004 「細動」に対する "Is a "でもあります。\index{concept!hierarchy}
 
-### 서로 다른 용어집에서 온 concept들 간의 관계
+### Relationships Between Concepts of Different Vocabularies
 
-이들 관계는 일반적으로 "Vocabulary A – Vocabulary B equivalent"의 유형으로, 기존 용어집 소스에서 제공되거나, OHDSI 용어팀에 의해 구축된다. 그것들은 대략적인 매핑 역할을 할 수 있지만, 종종 잘 정리된 매핑보다는 관계의 정확도가 떨어진다. High-quality equivalence 관교 (예: Source – RxNorm equivalent) 는 항상 "Maps to" 관계에 의해 복제된다.
+これらの関係は一般的に「用語A- 用語Bは同等である」というタイプのもので、原典の用語集から定義を提供されるか、OHDSI用語集チームが作成したものです。これらは近似的なマッピングの役割を果たしますが、多くの場合、より正確な関係性のマッピングよりも精度が低いことがあります。高品質の等価関係（例:"Source - RxNorm equivalent"）は常に"Maps to"関係として取り入れられます。
 
-### 동일 용어집 내 concept들 간의 관계
+### Relationships Between Concepts of the Same Vocabulary
 
-한 용어집 내부의 관계는 일반적으로 용어집 제공자가 보급한다. 전체적인 설명은 OHDSI Wiki의 개별 용어집 아래의 용어집 설명서에서 찾을 수 있다. 이들 중 다수는 임상 사건 간의 관계를 정의하여 정보 검색에 이용될 수 있다. 예를 들어, 요도 장애 disorders of the urethra는 “finding site of” 관계를 따라가면 찾을 수 있다. (표 \@ref(tab:findingSite)참조)
+内部の用語の関係性は、通常、用語集の提供者が提供しています。完全な説明は、OHDSI Wikiの個々の用語集に関するエントリーにある用語集のドキュメントを参照してください。[^vocabVocabulariesUrl]
 
 [^vocabVocabulariesUrl]: https://www.ohdsi.org/web/wiki/doku.php?id=documentation:vocabulary
 
-Table: (\#tab:findingSite) "요도 urethra"의 "Finding site of" 관계는 해부학적 구조에 위치한 모든 조건을 나타낸다.
+多くは臨床事象間の関係を定義しており，情報検索に利用できます．例えば、尿道の障害は、"Finding site of "の関係を辿ることで見つけることができます（表\@ref(tab:findingSite)参照）。
 
-CONCEPT_ID_1 | CONCEPT_ID_2
-:---------------- | :----------------------------
-4000504 "Urethra part" | 36713433 "Partial duplication of urethra"
-4000504 "Urethra part" | 433583 "Epispadias"
-4000504 "Urethra part" | 443533 "Epispadias, male"
-4000504 "Urethra part" | 4005956 "Epispadias, female"
+Table: (\#tab:findingSite) "Finding site of" relationship of "Urethra "の関係は、この解剖学的構造の中に全ての疾患が存在することを示しています
+
+|CONCEPT_ID_1 | CONCEPT_ID_2
+|:---------------- | :----------------------------
+|4000504 "尿道部" | 36713433 "尿道の部分重複"
+|4000504 "尿道部" | 433583 "尿道上裂"
+|4000504 "尿道部" | 443533 "尿道上裂, 男性"
+|4000504 "尿道部" | 4005956 "尿道上裂, 女性"
 	
-이러한 관계의 품질과 포괄성은 기존 용어집의 질에 따라 다르다. 일반적으로, SNOMED와 같은 표준 concept을 도출하는데 사용되는 용어집은 자료 분류와 구조화를 더 잘해주기 때문에, 내부 관계의 품질을 높여주는 데 도움이 된다.
+これらの関係性の定義の質や網羅性は、元の用語集の質によって異なります。一般的には、SNOMEDのように標準概念として利用するために使用されている用語集は、キュレーションが良いという理由で選ばれているため、内部の関係性の定義の質も高い傾向にあります。
 
-## 계층 Hierarchy {#conceptAncestor}
 
-도메인 내에서 표준 및 분류 체계는 계층 구조로 구성되며, CONCEPT_ANCESTOR 테이블에 저장된다. 이를 통해 concepts과 모든 계층적 하위 항목을 쿼리로 검색할 수 있게 된다. 이 하위 항목들은 그들의 상위 항목과 같은 속성을 가지고 있지만, 추가로 정의된 것들도 있다. 
+## Hierarchy {#conceptAncestor}
 
-계층적 관계를 통해 연결된 모든 가능한 concepts을 내포한 CONCEPT_RELATIONSHIP 테이블로부터 자동으로 CONCEPT_ANCESTOR 테이블이 생성된다. 이들은 "Is a" – "Subsumes" (그림 \@ref(fig:conceptAncestor) 참조), 또는 다른 종류의 관계를 서로 다른 용어집들 간에 계층화하여 연결한다. 한 관계가 계층 구조 생성자에 참여할 것 인가, 말 것인가의 선택은 RELATIONSHIP 참조 테이블의 DEFINIES_ANCESTRY라는 표시를 달아서 정의해준다.
+ドメイン内では、標準概念と分類概念は階層構造に編成され、CONCEPT_ANCESTORテーブルに格納されます。これにより、概念とそのすべての階層的な子孫を検索したり、取得したりすることができます。これらの子孫は、その祖先と同じ属性を持っていますが、追加の属性や定義された属性も持っています。
 
-(ref:foo) "심방세동 atrial fibrillation" condition의 계층. First degree ancestry는 "Is a"와 "Subsumes" 관계를 통해 정의되며, 모든 higher degree 관계는 추론되고, CONCEPT_ANCESTOR 표에 저장된다. 각 concept은 분리 수준이 0인 자기 자신의 하위concept이다. \index{concept!ancestor}
- 
+CONCEPT_ANCESTORテーブルは、CONCEPT_RELATIONSHIPテーブルから自動的に構築され、階層的な関係を介して接続されたすべての可能な概念を網羅します。これらは、"Is a" - "Subsumes "のペア（図\@ref(fig:conceptAncestor)参照）や、用語集を越えて階層的に接続された他の関係です。関係性が階層構造に参加するかどうかの選択は、各関係性IDについて、RELATIONSHIP参照テーブルのフラグDEFINES_ANCESTRYによって定義されます。
+
+(ref:foo) 症状 "心房細動 "の階層。第一親等の先祖関係は "Is a "と "Subsumes "の関係によって定義され、すべての高次の関係は推論され、CONCEPT_ANCESTORテーブルに格納される。各概念は、両方のレベルの分離が0に等しい、それ自身の子孫でもあります。 \index{concept!ancestor}   
+  
 ```{r conceptAncestor, fig.cap='(ref:foo)', echo=FALSE, out.width='100%', fig.align='center'}
 knitr::include_graphics("images/StandardizedVocabularies/conceptAncestor.png")
-``` 
+```  
 
-상위와 하위 항목 사이의 단계(step) 개수를 의미하는 ancestor degree는 MIN_LEVELS_OF_SEPARATION과 MAX_LEVELS_OF_SEPARATION으로 표현되고, 최단 또는 최장의 가능한 연결 정도를 정의해준다. 모든 계층적 관계가 분리 수준 계산에 동일하게 기여하는 것은 아니다. Degree를 구하기 위한 단계는 각 relationship ID에 대한 RELATIONSHIP 참조 테이블의 IS_HIERARCHICAL 표시 flag로 결정된다.
+先祖の程度、つまり祖先と子孫の間のステップ数は、MIN_LEVELS_OF_SEPARATIONフィールドとMAX_LEVELS_OF_SEPARATIONフィールドで捕捉され、可能な限り最短または最長の接続を定義します。すべての階層関係が、分離レベルの計算に等しく寄与するわけではありません。程度のためにカウントされるステップは、各リレーションシップIDのRELATIONSHIP参照テーブルのIS_HIERARCHICALフラグによって決定されます。
 
-현재, 고품질의 포괄적인 계층구조는 drug와 condition 두 개의 도메인에만 존재한다. Procedure, measurement, observation 도메인은 부분적으로만 적용되며 현재 구축 중에 있다. 조상(ancestry) concept은 출처, 상품명 또는 다른 속성들과 무관하게 특정 성분이나 약물 등급의 구성원을 가지는 모든 약물을 탐색할 수 있기 때문에 특히 약물 도메인에서 유용하다.
+現時点では、高品質な包括的階層が存在するのは、薬剤と状態の2つのドメインのみです。処置、検査、観察のドメインは部分的にしかカバーされておらず、構築中です。祖先に関する情報(ancestry)は、原産国、ブランド名、または他の属性に関係なく、与えられた成分を持つすべての薬剤または薬剤クラスのメンバーを閲覧できるので、薬剤ドメインでは特に有用です。
 
-## 내부 참조 테이블
+## Internal Reference Tables
 
-DOMAIN_ID, VOCABULARY_ID, CONCEPT_CLASS_ID (셋 모두 CONCEPT 레코드안에 있는) 및 CONCEPT_RELATIONSHIP_ID (CONCEPT_RELATIONSHIP 안에 있는)는 모두 자체 용어집에 의해 제어된다. 이들은 4개의 참조 테이블인 DOMAIN, VOCABULARY, CONCEPT_CLASS 및 RELATIONSHIP에 정의되어 있으며, *_ID 필드를 primary keys로 하여 더욱 자세한 *_NAME 필드 및 *_CONCEPT_ID 필드를 포함하는 CONCEPT 테이블에 대한 참조가 포함된 4개의 참조 테이블에 정의되어 있다. 이들 중복 레코드들의 목적은 정보 모델이 자동 탐색 엔진을 허용하도록 지원하기 위한 것이다.
+DOMAIN_ID、VOCABULARY_ID、CONCEPT_CLASS_ID(すべてCONCEPTレコード内)、CONCEPT_RELATIONSHIP_ID(CONCEPT_RELATIONSHIP内)はすべて独自の用語によって制御されます。これらは4つの参照テーブル DOMAIN, VOCABULARY, CONCEPT_CLASS, RELATIONSHIPで定義されており、主キーとしての*_IDフィールド、より詳細な*_NAMEフィールド、および参照テーブルレコードのそれぞれの概念を含むCONCEPTテーブルへの参照を持つ*_CONCEPT_IDフィールドを含んでいます。これらの重複レコードの目的は、自動ナビゲーション・エンジンを可能にする情報モデルをサポートすることにあります。
 
-VOCABULARY 테이블에는 기존 vocabulary의 source와 버전을 참조하는 VOCABULARY_REFERENCE 및 VOCABULARY_VERSION 필드가 포함되어 있다. RELATIONSHIP 테이블에는 추가 필드인 DEFINES_ANCESTRY, IS_HIERARCHICAL 및 REVERSE_RELATIONSHIP 필드가 있다. 후자는 한 쌍의 관계에 대해 반대의(counter) relationship ID를 정의한다.
+また、VOCABULARYテーブルは、元の用語のソースとバージョンを参照するVOCABULARY_REFERENCEおよびVOCABULARY_VERSIONフィールドを含みます。RELATIONSHIPテーブルは、追加のフィールドDEFINES_ANCESTRY、IS_HIERARCHICAL、およびREVERSE_RELATIONSHIP_IDを有します。後者は、関係性のペアの反対の関係性を定義する関係性IDを定義します。
 
-## 특수 상황 {#specialSituations}
+## Special Situations {#specialSituations}
 
-### 성별
+### Gender
 
-OMOP CDM 및 표준 용어집의 성별은 출생 시의 생물학적 성별을 나타내지만, 종종 양자택일하는 성별을 어떻게 정의하는지 의문이 제기된다. 이러한 사례들은 OBSERVATION 테이블의 레코드를 통하여 처리해야 하는데, 여기에 개인이 자체적으로 정의한 성별이 저장된다 (데이터 자산에 그런 정보가 포함된 경우).
+OMOP CDM および標準用語集における性別は、出生時の生物学的性別を示す。しばしば、代替的な性別をどのように定義するかという質問が出てくる。これらのユースケースは、OBSERVATION テーブルのレコードでカバーしなければならず、（データ資産にそのような情報が含まれている場合には）人の自己定義の性別が格納される。
 
-### 인종과 민족
+### Race and Ethnicity
 
-인종(race)과 민족(ethnicity)은 미국 정부가 지정한 정의를 따른다. 민족은 인종과 상관없이, Hispanic 또는 non-Hispanic 인구에서 분화된 세부 항목으로 구분한다. 인종은 공통적인 상위 5개 인종으로 나뉘며, 계층적 후손으로서 민족성을 가지고 있다. 혼혈 인종은 포함되지 않는다.
+これらは、米国政府の定義に従っています。民族とは、ヒスパニック系か非ヒスパニック系かの区別であり、どのような人種でもよいです。人種は主な5つの上位人種で区分され、その階層的な子孫として民族を持つ。いわゆるハーフは含まれない。
 
-### 진단 코딩 체계 및 OMOP Conditions
+### Diagnostic Coding Schemes and OMOP Conditions
 
-ICD-9 또는 ICD-10과 같은 일반적으로 사용되는 코딩 체계는 적절한 진단 작업에 기반하여, 다소 잘 정의된 진단을 명시한다. condition 도메인은 의미론적 공간과 동일하지 않지만, 부분적으로 겹치는 부분이 있다. 예를 들어, conditions에는 진단이 도출되기 전에 기록된 징후와 증상도 포함되어있으며, ICD 코드에는 다른 도메인에 속하는 concept (예를 들어, procedures) 이 포함되어 있다.
+ICD-9やICD-10のような一般的に使用されているコーディングスキームは、適切な診断ワークアップに基づいて、それなりに確定された診断群を定義しています。状態ドメインは、この意味空間と同一というわけではなく、部分的に重複しています。例えば、状態ドメインには、診断が導出される前に記録される徴候や症状も含まれておりますし、ICDコードには他のドメイン（例えば、処置）に属する概念が含まれていたりします。
 
-### 시술 코드 시스템
+### Procedure Coding Systems
 
-마찬가지로, HCPCS 및 CTP4와 같은 코딩 체계는 의료 시술의 목록으로 간주한다. 실제로, 이 체계들은 의료비 지급 타당성을 선택하는 메뉴에 가깝다. 이러한 서비스의 많은 부분이 procedure 도메인 하에 포함되어 있지만, 많은 concept이 이 도메인 밖에 벗어나 있다.
+同様に、HCPCSやCPT4のようなコーディングスキームは、医療処置のリストと考えられています。実際には、これらは医療サービスの支払いを正当化するためのメニューのようなものです。これらのサービスの多くは手技の領域に含まれていますが、多くの概念はこの領域から外れています。
 
-### 기기
+### Devices
 
-기기 concept(Device concepts)은 원천 표준 concept에 사용될 수 있는 표준화된 코드 체계를 가지고 있지 않다. 많은 source 데이터에서 기기들은 코드화되어 있지 않고, 외부 코딩 체계에도 포함되지 않는다. 이와 같은 이유로, 현재 사용 가능한 계층 시스템이 없다.
+デバイスの概念には、標準概念のソースに使用できる標準化されたコーディングスキームがありません。多くのソースデータでは、デバイスはコード化されていないか、外部コーディングスキームにすら含まれていません。同様に、現在利用可能な階層体系はありません。
 
-### 방문 및 서비스
+### Visits and Services
 
-방문 concept은 의료 서비스의 성격을 정의한다. 많은 source system에서 병원과 같은 일부 기관이나, 물리적 구조를 나타내는 장소를 서비스 공간이라고 한다. 다른 곳에서는 서비스라고 한다. 방문 concept은 또한 국가마다 다르며, 정의하기 쉽지 않다. 진료 장소(Care sites)는 일반적으로 방문을 몇 번 했는지로 특정한다 (예를 들어, XYZ병원) 그러나 그 방문 숫자만으로는 정의하지는 않아야 한다. (예를 들어, XYZ병원에서 조차 환자들은 진료 목적이 아닌 방문을 할 수도 있기 때문이다)
+来院(Visits)の概念は、医療機関における受療を定義する。多くのソースシステムでは、「医療サービスの提供場所」と呼ばれ、病院などの組織や物理的な構造物を意味する。他のシステムでは、サービスと呼ばれることもある。これらも国によって異なり、統一された定義を得るのは困難である。診療施設(Care site)は、多くの場合、数回来院した施設に集約させる（XYZ病院）が、それでも、それによって定義されるべきではない（XYZ病院の患者であっても、患者は当該病院外で受診することがあるかもしれない）。
 
-### 제공자 및 전문의 
+### Providers and Specialties
 
-모든 인간 제공자들은 provider 도메인에 정의되어 있다. 이 제공자들은 의사 및 간호사와 같은 의료 전문가일 수도 있지만, 검안사나, 신발 제조업자와 같은 비의료 서비스 제공자(non-medical provider)일 수도 있다. 전문의는 제공자인 "의사"(Physician)의 하위concept이다. Care sites는 전문성을 보유할 수 없으나, 주요 직원의 전문성에 의해 정의되는 경우가 많다 ("외과 Surgical department").
+医療従事者のドメインでは、あらゆる（人間の）医療従事者が定義されている。これらは、医師や看護師のような医療専門家だけでなく、検眼士や靴屋のような非医療専門家であってもよい。専門分野は、医療従事者である "Physician "の子孫である。診療施設は、主流を占める（例えば「外科部門」）の専門性によって定義されていることが多いが、専門性を持つことはできない。
 
-### 특별한 요구사항이 있는 치료 영역
 
-표준 용어들은 포괄적인 방식으로 의료의 모든 측면을 다루고 있다. 하지만, 일부 치료영역에서는 특별한 요구를 가지고 있으며, 특별한 용어집이 필요하다. 예로, 종양학, 방사선학, 유전체학 같은 것이다. Special OHDSI Working Groups은 이러한 확장 기능을 개발한다. 결과적으로, OMOP 표준 용어집은 통합 시스템을 구성하여 서로 다른 기원과 목적으로 생긴 concept들이 모두 동일한 도메인 특화 계층 내에 존재하게 된다. 
+### Therapeutic Areas With Special Requirements
 
-### 약물 도메인 내의 표준 concept {#rxNormExtension}
+標準化された用語集は、医療のあらゆる側面を包括的にカバーしています。しかし、一部の治療分野では特別なニーズがあり、特別な用語集が必要とされています。例として、腫瘍学、放射線学、ゲノミクスなどが挙げられます。特別な OHDSI ワーキンググループがこれらの拡張機能を開発しています。その結果、OMOP 標準語用語集は統合されたシステムを構成しており、異なる起源と目的を持つ概念がすべて同じドメイン固有の階層に存在しています。
 
-Drug 도메인의 많은 concept은 미국 국립 의학 도서관(National Library of Medicine)이 제공하는 용어집인 RxNorm에서 제공하고 있다. 하지만, 미국 외 지역의 의약품은 미국에서 시판되는 성분, 형태, 강도의 조합 인지에 따라 다뤄지거나 다뤄지지 않을 수도 있다. 미국 시장에 없는 약물은 OHDSI 용어팀에 의해 [RxNorm 확장판, RxNorm Extension](https://www.ohdsi.org/web/wiki/doku.php?id=documentation:vocabulary:rxnorm_extension)이라는 용어집으로 추가되며, 이것은 OHDSI에 의해 유일하게 생성된 큰 도메인 용어집이다.
+### Standard Concepts in the Drug Domain {#rxNormExtension}
 
-### NULL의 특색
+医薬品ドメインの多くの概念は、米国国立医学図書館が作成した一般に公開されている用語集であるRxNormから出典を得ています。しかし、米国外の医薬品は、成分、形態、強度の組み合わせが米国で販売されているかどうかによって、対象となる場合と対象とならない場合があります。米国市場に出回っていない薬剤は、OHDSI語彙チームが[RxNorm Extension](https://www.ohdsi.org/web/wiki/doku.php?id=documentation:vocabulary:rxnorm_extension)と呼ばれる語彙の下に追加しており、これはOHDSIが作成した唯一の大きなドメイン用語集です。
 
-많은 용어집에는 정보가 없는 코드들을 포함하고 있다. 예를 들어, 5개의 성별 concept인 8507 "Male", 8532 "Female", 8570 "Ambiguous", 8551 "Unknown", 8521 "기타" 중 앞의 2개인 8507 "Male", 8532 "Female"만 표준이며, 나머지 3개는 매핑이 되어있지 않은 source concepts이다. 표준 용어집에서는 왜 정보가 없는지에 대한 구분은 없다. 환자가 정보를 철회하거나, 결측값, 정의되지 않거나 표준화되지 않은 값 때문일 수도 있으며 COCEPT_RELATIONSHIP에 매핑 레코드가 없는 경우 일 수도 있다. 이러한 concept은 매핑되지 않으며, 이는 concept ID = 0인 표준 concept 기본 매핑에 해당한다.
+### Flavors of NULL
 
-## 요약 
+多くの用語集には、情報の不在に関するコードが含まれています。例えば、5つの性別を表す概念、8507「男性」、8532「女性」、8570「曖昧」、8551「不明」、および8521「その他」のうち、最初の2つだけが標準であり、他の3つはマッピングのないソース概念です。それは、患者による情報の撤回によるもの、値の欠落、何らかの方法で定義されていないか、標準化されていない値、またはCONCEPT_RELATIONSHIPにマッピングレコードがないためかもしれません。そのような概念はマッピングされず、'概念ID=0'の標準概念へのデフォルトマッピングに対応します。
+
+## Summary
 
 ```{block2, type='rmdsummary'}
-- 모든 이벤트 및 관리되는 사건은 OMOP 표준 용어집에 concept, concept 관계 및 concept 상위 계층으로 표현된다.
-- 이 중 대부분은 기존의 코딩 체계나 용어집에서 채택해지만, 일부는 OHDSI 용어팀에서 새로 선별했다.
-- 모든 concept은 한 개의 도메인을 가지는데, 그런데 그 도메인은 concept으로 표현되는 그 사건이 CDM의 어떤 테이블에 저장될 지를 결정한다.
-- 다른 용어집에서 동등한 의미가 있는 concept들은 그중 하나에 매칭되는데, 그것이 표준concept으로 지정된 concept이다. 다른 concept들은 원천 concept들이다.
-- 매핑은 "Maps to"와 "Maps to value" concept relationships을 통해 수행된다.
-- 분류 concept이라 불리는 추가 concept 계층이 있는데, 이는 비표준이지만, 원천 concept과 달리 계층으로 존재한다. 비표준인, 분류 concept이라고 불리는 추가적인 concepts class가 있다. 하지만, source concepts과는 다르게 계층으로 존재한다.
-- concept은 시간이 지남에 따라 수명 주기(life-cycle)를 갖는다.
-- 도메인 내의 concept은 계층으로 구성된다. 계층구조의 품질은 도메인마다 상이하며, 계층 구조 시스템의 완성을 위해 아직 진행 중이다. 
-- 실수나, 오류를 발견한 경우 커뮤니티에 참여할 것을 적극적으로 권장한다.
-
+- OMOP 標準用語集では、すべての事象や管理上の事実が概念、概念関係、概念の祖先階層として表現されています。
+- ほとんどは既存のコーディングスキームや用語集から採用されていますが、OHDSI用語集チームによって一から開発されているものもあります。
+- すべての概念にはドメインが割り当てられています。これは概念によって表現された事実が CDM のどこに格納されるかを制御するものです。
+- 異なる用語集で同等の意味を持つ概念は、そのうちの1つにマッピングされ、標準概念に指定されます。それ以外のものはソース概念となります。
+- 「Maps to」と「Maps to value」という概念間の関係性を用いてマッピングが行われます。
+- 分類概念と呼ばれる概念の追加クラスがあります。これは非標準ですが、ソース概念とは違って概念階層の構成に参加します。
+- 概念には、時間の経過とともにライフサイクルがあります。
+- ドメイン内の概念は、階層に編成されます。階層の質はドメインごとに異なり、階層体系の作り込みは継続的な作業です。
+- 間違いや不正確な点を発見したと思われる場合は、コミュニティに参加することを強くお勧めします。
 ```
 
-## 예제
+## Exercises
 
-#### 전제조건 {-}
+#### Prerequisites {-}
 
-첫 연습에서는, ATHENA[^athenaCdm2Url] 또는 ATLAS[^atlasCdm2Url]를 이용해서 표준용어집 내에서
-concept을 찾아 볼 필요가 있다.
+最初の演習では、ATHENA[^athenaCdm2Url] やATLAS[^atlasCdm2Url]を使って標準語彙集の概念を調べます。
 
 [^athenaCdm2Url]: http://athena.ohdsi.org/
 [^atlasCdm2Url]: http://atlas-demo.ohdsi.org
 
 ```{exercise, exerciseVocab1}
-"위장관 출혈 gastrointestinal hemorrhage"에 대한 Standard Concept ID는 무엇인가?
+「消化管出血」の標準概念IDは？
 
 ```
 
 ```{exercise, exerciseVocab2}
-"위장관 출혈 gastrointestinal hemorrhage"에 대한 Standard Concept에 어떤 ICD-10CM 코드가 매핑되는가? 이 Standard Concept에 어떤 ICD-9CM 코드가 매핑되는가?
+「消化管出血」の標準概念に対応する ICD-10CM コードはどれか？どのICD-9CMコードがこの標準概念に対応するか？
+
 
 ```
 
 ```{exercise, exerciseVocab3}
-"위장관 출혈 gastrointestinal hemorrhage"에 대한 Standard concept에 해당하는 MedDRA 선호 용어는 무엇인가?
- 
+消化管出血の標準概念に相当する MedDRAの優先用語は何か？
+
 ```
 
-
-제시된 답변은 부록 \@ref(Vocabanswers)에서 찾을 수 있다.
+回答はAppendix \@ref(Vocabanswers)で確認できます。
