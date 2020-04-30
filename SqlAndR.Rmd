@@ -38,11 +38,11 @@ install.packages("SqlRender")
 
 SqlRenderは従来のデータベースシステム (PostgreSQL では、Microsoft SQL Server し、SQLite、and Oracle)、並列データウェアハウス (Microsoft APS、IBM Netezza, and Amazon RedShift)、ビッグデータのプラットフォーム (Hadoop through Impala, and Google BigQuery) を含むいくつかの技術プラットフォームをサポートする。
 
-# # # SQL のパラメーター化
+### SQL のパラメーター化
 
 パッケージの機能の1つは SQL ステートメントにパラメータをサポートすることである。いくつかのパラメーターに基づいて、SQL ステートメントを断片的に変換する必要がしばしばある。SqlRender パラメーターを許可するために SQL コード内で簡単なマークアップ構文を提供する。パラメーターを基に SQL を表示することは`render()` 関数を使用して実行する。 \index{SqlRender!parameterization}
 
-#### 매개 변수값 대체하기 {-}
+#### パラメーターの値を置換する {-}
 
 `@` 文字は、表示料金は実際のパラメーター値と交換する必要があるパラメーターの名前を表すために使用できる。次の例 `a`と呼ばれる変数を SQL で述べられている。レンダリング関数を呼び出すときにパラメーターの値が定義される:
 
@@ -198,9 +198,9 @@ SELECT * FROM a EXCEPT SELECT * FROM b;
 
 文字列は SQL Server が他の言語よりも特定の領域である。SQL Server では、 `SELECT first_name + ' ' + last_name AS full_name FROM table`のような記述が、Postgres と Oracle では、`SELECT first_name || ' ' || last_name AS full_name FROM table` と作成する。SqlRender は、関連付けられている値が文字列であることを仮定しようとする。上記の例では明示的な文字列 (単一引用符で囲まれたスペース) があるため、翻訳は正確である。が`SELECT first_name + last_name AS full_name FROM table`など作成している場合 SqlRender は、2つのフィールド文字列と呼ばれる手がかりはなく、プラス記号を残した。値が文字列と呼ばれるもう一つの手がかりは "VARCHAR"への明示的なキャストなので、`SELECT last_name + CAST(age AS VARCHAR(3)) AS full_name FROM table` も適切に変換される。あいまいさを回避するには```CONCAT()``` 関数を使用して2つ以上の文字列を連結することが最もよいです。
 
-#### 테이블 별칭과 AS 키워드 {-}
+#### テーブルと AS キーワード {-}
 
-많은 SQL 언어는 테이블 별칭을 정의할 때 `AS` 키워드를 사용할 수 있지만, 키워드 없이도 잘 동작 한다. 예를 들어, 이 두 SQL 문은 SQL Server, PostgreSQL, RedShift 등에 적합하다:
+많은 SQL 言語は、テーブルの別名を定義するときに `AS` キーワードを使用できますが、キーワードなしでも正常に動作する。たとえば、これら2つの SQL ステートメントは、SQL Server、PostgreSQL、RedShift など適切である:
 
 ```sql
 -- Using AS keyword
@@ -220,30 +220,30 @@ INNER JOIN (
 ON table_1.person_id = table_2.person_id;
 ```
 
-그러나 Oracle에서는 `AS` 키워드를 사용하면 오류가 발생한다. 위의 예제 중 첫 번째 질의는 실패한다. 따라서 테이블 별칭을 지정할 때 `AS` 키워드를 사용하지 않는 것이 좋다. (참고로 Oracle에서 `AS`를 사용할 수 없는 테이블 별칭과 이 `AS`를 사용해야 하는 필드 별칭을 쉽게 구별할 수 없기 때문에 SqlRender가 이 것을 처리하도록 만들 수 없다)
+が Oracle では、 `AS` キーワードを使用するとエラーが発生する。の上述の例の最初のクエリは失敗する。従ってテーブルの別名を指定するときに`AS` キーワードを使用しないほうがいい。(注と Oracle では、`AS`を使用できないテーブルとは `AS`を使用する必要があるフィールドの別名を簡単に区別できないため、SqlRender がこの1つを処理することができない)
 
-#### 임시 테이블 {-}
+#### 一時テーブル{-}
 
-임시 테이블은 중간 결과를 저장하는 데 매우 유용할 수 있으며 올바르게 사용하면 질의 성능을 크게 향상할 수 있다. 대부분의 데이터베이스 플랫폼에서 임시 테이블이라는 매우 좋은 기능을 가지고 있다: 현재 사용자에게만 보이며 세션이 끝나면 자동으로 삭제되고 사용자에게 쓰기 권한이 없어도 생성할 수 있다. 불행히도, Oracle에서는 임시테이블은 기본적으로 영구적인 테이블이며, 데이터의 내부는 현재 사용자에게만 보인다는 차이점만 있다. 이것이 Oracle에서 SqlRender가 다음과 같이 임시 테이블을 에뮬레이션하려고 시도하는 이유이다.
+一時テーブルは、中間結果を格納するために非常に有用であることが、正しく使用すると、クエリパフォーマンスが大幅に向上させることがある。ほとんどのデータベースプラットフォームでは、一時テーブルと呼ばれる非常に良い機能を持っている: 現在のユーザーのみに表示され、セッションが終了すると自動的に削除され、ユーザーに書き込みアクセス許可がなくても作り出すことができる。残念なことに、Oracle は、一時テーブルは既定では、永続的なテーブルで、データの内部は現在のユーザーのみが異なっている。これは Oracle では、SqlRender が次のように一時テーブルをエミュレートしようとする理由である.
 
-1. 테이블 이름에 임의의 문자열을 추가하여 다른 사용자의 테이블이 충돌하지 않도록 한다.
-2. 사용자가 임시 테이블이 작성될 스키마를 지정할 수 있도록 허용한다. 
+1. テーブル名に任意の文字列を追加して他のユーザーのテーブルが競合しないようにする。
+2. ユーザーは、一時テーブルが作成されるスキーマを指定することを許可する。
 
-예를 들면:
+例えば:
 ```{r tidy=TRUE,echo=TRUE}
 sql <- "SELECT * FROM #children;"
 translate(sql, targetDialect = "oracle", oracleTempSchema = "temp_schema")
 ```
 
-사용자는 `temp_schema`에 대한 쓰기 권한이 있어야 한다.
+ユーザーは `temp_schema`に対する書き込み権限がなければならない。
 
-또한 Oracle은 테이블 이름이 30자로 제한되어 있다. 세션 아이디를 추가한 후 이름이 너무 길어지기 때문에 **임시 테이블 이름은 최대 22자까지만 허용된다**.
+また Oracle はテーブルの名前が30文字に制限されている。セッションのユーザー名を追加した後、名前が余りに長くのために **一時テーブルの名前は最大22文字まで可能になる**。
 
-뿐만 아니라 Oracle의 임시 테이블은 자동 삭제되지 않으므로 Oracle에 임시 테이블 스키마가 쌓이는 것을 방지하기 위해 모든 임시 테이블을 사용한 후에는 명시적으로 ```TRUNCATE``` 및 ```DROP``` 을 해야 한다.
+だけでなく、Oracle の一時テーブルは自動的に削除されないので、Oracle の一時テーブルのスキーマが積まれることを防ぐためにすべての一時テーブルを使用した後には明示的に ```TRUNCATE``` と ```DROP```をする必要があります。
 
-#### 암묵적인 형변환 {-}
+#### 暗黙のキャスト {-}
 
-SQL Server가 다른 언어보다 덜 명시적인 몇 가지 점 중 하나는 암묵적인 형변환을 허용한다는 것이다. 예를 들어 이 코드는 SQL Server에서 작동한다:
+SQL Server が他の言語よりも明確ないくつかのポイントの1つは暗黙のキャストを可能にすることである。たとえば、このコードは SQL Server 上で動作する:
 
 ```sql
 CREATE TABLE #temp (txt VARCHAR);
@@ -254,78 +254,77 @@ SELECT '1';
 SELECT * FROM #temp WHERE txt = 1;
 ```
 
-비록 `txt` 는 VARCHAR 필드이고 이것을 정수와 비교하고 있지만, SQL Server는 비교를 허용하기 위해 두 가지 중 하나를 자동으로 올바른 타입으로 변환한다. 이와 대조적으로, PostgreSQL과 같은 다른 언어는 VARCHAR와 INT를 비교하려고 할 때 오류를 일으킬 것이다.
+```txt``` は、VARCHAR フィールドであり、これを整数と比較していますが、SQL Server は比較を可能にするために2つのいずれかを自動的に適切なタイプに変換する。対照的に、PostgreSQL のような他の言語は VARCHAR と INT を比較しようとするときにエラーを引き起こすことである。
 
-따라서 형 변환은 항상 명시적으로 해야 한다. 위의 마지막에 있는 예는
+この型変換は常に明示的にする必要があります。上記の最後の例は
 
 ```sql
 SELECT * FROM #temp WHERE txt = CAST(1 AS VARCHAR);
 ```
 
-또는 아래와 같이 대체되어야 한다.
+または次のように取り替えられなければならない。
 
 ```sql
 SELECT * FROM #temp WHERE CAST(txt AS INT) = 1;
 ```
 
-#### 문자열 비교의 대소문자 구분 {-}
+#### 文字列比較で大文字と小文字を区別する {-}
 
-SQL Server와 같은 일부 DBMS 플랫폼은 대소문자를 구분하지 않는 비교를 수행하는 반면, PostgreSQL과 같은 다른 플랫폼은 대소문자를 구분한다. 따라서 항상 대소문자를 구분하는 비교를 가정하고 명확하게 모르는 경우 명시적으로 대소문자를 구분하지 않도록 하는 명령을 추가하여 비교하기 추천한다. 예를 들어,
+SQL Server など、一部の DBMS プラットフォームでは、大文字と小文字を区別しない比較を実行するのに対し、PostgreSQL のような他のプラットフォームでは、大文字と小文字を区別する。常に大文字と小文字を区別しない比較を前提とし、明確にわからない場合は、明示的に大文字と小文字を区別しないようにするコマンドを追加して比較することを推薦する。たとえば、
 
 ```sql
 SELECT * FROM concept WHERE concep_class_id = 'Clinical Finding'
 ```
-대신, 다음과 같이 사용하는 것이 좋다.
+の代わりに、次のように使用することが良いです。
 ```sql
 SELECT * FROM concept WHERE LOWER(concep_class_id) = 'clinical finding'
 ```
 
-#### 스키마와 데이터베이스 {-}
+#### スキーマとデータベース {-}
 
-SQL Server에서 테이블은 스키마안에 있으며 스키마는 데이터베이스 안에 있다. 예를 들면, `cdm_data.dbo.person`은 `cdm_data` 데이터베이스의 `dbo` 스키마 안에 있는 `person` 테이블을 말한다. 다른 언어에서는 비슷한 계층 구조가 종종 존재하더라도 매우 다르게 사용된다. SQL Server에는 일반적으로 데이터베이스 당 하나의 스키마 (`dbo`라고 함), 가 있으며 사용자는 다른 데이터베이스의 데이터를 쉽게 사용할 수 있다. Postgres와 같은 다른 플랫폼에서는 단일 세션에서 데이터베이스 간 데이터를 사용할 수 없지만, 데이터베이스 안에는 많은 스키마를 가지고 있다. SQL Server의 데이터베이스는 PostgreSQL에서 스키마라고 할 수 있다.
+SQL Server のテーブルは、スキーマ内に、スキーマはデータベース内にある。例えば、`cdm_data.dbo.person` は `cdm_data` の `dbo` のスキーマ内にある `person` テーブルを言う。他言語でのような階層構造がしばしば存在するが非常に別様に使用される。SQL Server には、通常、データベースごとに1つのスキーマ (`dbo` と呼ばれる)、があり、ユーザーは他のデータベースのデータを簡単に使用できる。Postgres のような他のプラットフォームでは、単一のセッションでは、データベース間でデータを使用できません。ただし、データベース内には多くのスキーマを持っている。SQL Server のデータベースは、PostgreSQL では、スキーマと呼ばれることがある。
 
-따라서 SQL Server의 데이터베이스와 스키마를 단일 매개변수로 연결할 것을 권장한다. 이 매개 변수는 일반적으로 `@databaseSchema` 라고 한다. 예를 들면 우리는 매개 변수화된 SQL을 가질 수 있다.
+したがって SQL Server のデータベースおよびスキーマを単一のパラメーターとして接続することを推奨する。このパラメーターは通常は `@databaseSchema`とする。例えば私達は、パラメータ化された SQL を持つことができる。
 ```sql
 SELECT * FROM @databaseSchema.person
 ```
-SQL Server에서 `databaseSchema = "cdm_data.dbo"`값에 데이터베이스와 스키마이름을 모두 포함할 수 있다. 다른 플랫폼에서는 동일한 코드를 사용할 수 있지만, 스키마 매개 변수 값은 다음과 같이 지정한다: `databaseSchema = "cdm_data"`
+SQL Server から `databaseSchema = "cdm_data.dbo"`値、データベースとスキーマ名を含めることができる。他のプラットフォームで同じコードを使用できますが、スキーマのパラメーターの値は次の通り示す: `databaseSchema = "cdm_data"`
 
-이것이 실패하는 한 가지 상황은 에러를 발생시키는 `USE cdm_data.dbo;`, 즉 `USE` 명령어를 사용했기 때문이다. 따라서 `USE` 명령어를 사용하지 말고 항상 테이블이 있는 데이터베이스 및 스키마를 지정하는 것이 바람직하다. 
+これが失敗するは1つの状態はエラーを発生させる`USE cdm_data.dbo;`, つまり `USE` コマンドを使用したためである。に沿って `USE` コマンドを使用せず、常にテーブルを含むデータベースおよびスキーマを指定することが望ましい。
 
+#### パラメータ化された SQL をデバッグする {-}
 
-#### 매개 변수화 된 SQL 디버깅하기 {-}
+パラメータ化された SQL をデバッグすることは幾分複雑であることができる。表示された SQL データベースサーバーをテストすることができますが、パラメーター化された (事前レンダリングされた) SQL コードを変更する必要があります。\index{SqlRender!debugging}
 
-매개 변수화된 SQL을 디버깅하는 것은 약간 복잡할 수 있다. 렌더링 된 SQL만 데이터베이스 서버에 대해 테스트할 수 있지만 매개 변수화된 (사전 렌더링 된) SQL에서 코드를 변경해야 한다. \index{SqlRender!debugging}
-
-SqlRender 패키지에는 대화형으로 SQL소스를 편집하여 SQL을 랜더링을 하거나 반대로 번역할 수 있는 샤이니 앱이 포함되어 있다. 이 앱은 다음과 같이 시작한다:
+SqlRender パッケージには、対話的に SQL ソースを編集して SQL を랜더링을、またはその逆変換することができるシャイアプリが含まれています。このアプリは次の通り始まる:
 
 ```{r tidy=TRUE,eval=FALSE}
 launchSqlRenderDeveloper()
 ```
 
-그러면 그림 \@ref(fig:sqlDeveloper)에 표시된 앱으로 기본 브라우저가 열린다. 이 앱은 웹에서도 공개적으로 사용할 수 있다.[^sqlDeveloperUrl] 
+図 \@ref(fig:sqlDeveloper)に表示されたアプリを既定のブラウザーが開かれる。このアプリはウェブ上でも公開することがある.[^sqlDeveloperUrl] 
 
 ```{r sqlDeveloper, fig.cap='The SqlDeveloper Shiny 앱.',echo=FALSE, out.width='100%', fig.align='center'}
 knitr::include_graphics("images/SqlAndR/sqlDeveloper.png")
 ```
 
-앱에서 OHDSI SQL을 입력하고 대상 언어를 선택하고 SQL에 매개 변수 값을 제공하면 자동으로 번역된 SQL이 하단에 나타난다.
+アプリで OHDSI SQL を入力し、ターゲット言語を選択し、SQL のパラメーター値を指定すると、自動的に翻訳されている SQL が下部に表示される。
 
 [^sqlDeveloperUrl]: http://data.ohdsi.org/SqlDeveloper/
 
 ## DatabaseConnector {#DatabaseConnector}
 
-[DatabaseConnector](https://ohdsi.github.io/DatabaseConnector/) 는 Java의 JDBC 드라이버를 사용하여 다양한 데이터베이스 플랫폼에 연결하기 위한 R 패키지이다. DatabaseConnector 패키지는 CRAN (종합 R 아카이브 네트워크) 에서 사용할 수 있으므로 다음을 사용하여 설치할 수 있다:
+[DatabaseConnector](https://ohdsi.github.io/DatabaseConnector/) は、Java の JDBC ドライバーを使用してさまざまなデータベースプラットフォームに接続するための R パッケージです。DatabaseConnector パッケージは CRAN (広範囲 R のアーカイブネットワーク) で使用できるよう下記のものを使用してインストールすることができる:
 
 ```{r, eval=FALSE}
 install.packages("DatabaseConnector")
 ```
 
-DatabaseConnector는 기존 데이터베이스 시스템 (PostgreSQL, Microsoft SQL Server, SQLite 및 Oracle), 병렬 데이터웨어 하우스 (Microsoft APS, IBM Netezza 및 Amazon RedShift) 및 빅데이터 플랫폼 (Hadoop through Impla 및 Google BigQuery) 을 포함한 다양한 기술 플랫폼을 지원한다. 패키지에는 이미 대부분의 드라이버가 포함되어 있지만, 라이센스 문제로 인해 BigQuery, Netezza 및 Impla 용 드라이버는 포함되어 있지 않아서 사용자가 구해야 한다. 이러한 드라이버를 다운로드하는 방법에 대한 지침을 보려면 `?jdbcDrivers` 를 입력한다. 다운로드한 후 `connect`, `dbConnect`, and `createConnectionDetails` 함수의 `pathToDriver` 인수로 사용할 수 있다.
+DatabaseConnector は既存のデータベースシステム (PostgreSQL では、Microsoft SQL Server し、SQLite および Oracle)、並列データ倉庫 (Microsoft APS、IBM Netezza および Amazon RedShift) およびビッグデータのプラットフォーム (Hadoop through Impla と Google BigQuery) を含むさまざまな技術プラットフォームをサポートする。パッケージには既にほとんどのドライバーが含まれていますが、ライセンス問題のために BigQuery、Netezza および Impla のドライバーは含まれていないため、ユーザーが入手する。これらのドライバーをダウンロードする方法に関するガイダンスを表示するには `?jdbcDrivers` を入力する。ダウンロードした後 `connect`、`dbConnect` and `createConnectionDetails` 関数 `pathToDriver` の引数として使用することがある。
 
-### 연결 생성하기
+###接続を作成する
 
-데이터베이스에 연결하려면 데이터베이스 플랫폼, 서버의 위치, 사용자 이름 및 비밀번호와 같은 많은 세부 사항을 지정해야 한다. `connect` 함수를 호출하여 다음 세부 사항을 직접 지정할 수 있다: \index{DatabaseConnector!creating a connection}
+データベースに接続するには、データベースプラットフォームは、サーバーの場所、ユーザー名およびパスワードなどの多くの細部を指定する必要があります。`connect` 関数を呼び出して、次の細部を直接指定することがある: \index{DatabaseConnector!creating a connection}
 
 ```{r eval=FALSE}
 conn <- connect(dbms = "postgresql",
@@ -338,13 +337,13 @@ conn <- connect(dbms = "postgresql",
 writeLines("Connecting using PostgreSQL driver")
 ```
 
-각 플랫폼에 필요한 세부 사항에 대한 정보는 `?connect` 를 참조하라. 나중에 작업을 마치고 연결 끊는 것을 잊지 말라:
+各プラットフォームに必要な詳細事項については `?connect` を参照して下さい。後でタスクを完了し、接続を解除することを忘れてはいけない:
 
 ```{r eval=FALSE}
 disconnect(conn)
 ```  
 
-서버 이름을 제공하는 대신 JDBC connecting string을 사용하는 것이 더 편리할 경우 이를 제공할 수도 있다는 점에 유의하라:
+サーバー名を指定する代わりに、JDBC connecting string を使用する方が便利な場合を提供することもあることに注意して下さい:
 
 ```{r eval=FALSE}
 connString <- "jdbc:postgresql://localhost:5432/postgres"
@@ -358,7 +357,7 @@ conn <- connect(dbms = "postgresql",
 writeLines("Connecting using PostgreSQL driver")
 ```
 
-때때로 먼저 세부 사항을 지정하고 나중에 연결할 때까지 연결을 연기해야 할 수 있다. 예를 들어, 함수 내에서 연결이 설정되고 세부 사항은 인수로 전달해야 하는 경우에 편리할 수 있다. 이를 목적으로 `createConnectionDetails` 함수를 사용할 수 있다:
+時々先に詳細を指定し、後で接続するまで延期する必要がある。たとえば、関数内で接続が確立され、細部は引数として渡す必要がある場合に便利な場合がある。この目的のために `createConnectionDetails` 関数を使用することができる:
 
 ```{r eval=FALSE}
 details <- createConnectionDetails(dbms = "postgresql",
@@ -372,11 +371,11 @@ conn <- connect(details)
 writeLines("Connecting using PostgreSQL driver")
 ```
 
-### 질의하기
+### 質疑する
 
-데이터베이스 질의를 위한 주요 함수는 `querySql`과 `executeSql` 이다. 이러한 함수의 차이점은 `querySql`은 데이터베이스가 데이터를 반환할 것으로 예상하며, 한 번에 하나의 SQL 문만 처리할 수 있다는 것이다. 이와 대조적으로 `executeSql`은 데이터를 반환할 것을 예상하지 않으며, 단일 SQL 문자열에서 복수의 SQL 문을 수용한다. \index{DatabaseConnector!querying}
+データベースの質のための主要な関数は `querySql`と `executeSql` である。これらの関数の違いは`querySql`はデータベースがデータを返すことを期待し、一度に1つの SQL ステートメントを処理できることである。対照的に`executeSql`はデータを返すことを期待しなかったし、1つの SQL 文字列で複数の SQL ステートメントを収容する。\index{DatabaseConnector!querying}
 
-몇가지 예시:
+いくつかの例:
 
 ```{r eval=FALSE}
 querySql(conn, "SELECT TOP 3 * FROM person")
@@ -389,39 +388,39 @@ data.frame(person_id = c(1,2,3), gender_concept_id = c(8507, 8507, 8507), year_o
 executeSql(conn, "TRUNCATE TABLE foo; DROP TABLE foo;")
 ```
 
-두 함수 모두 광범위한 오류보고 기능을 제공한다: 서버에서 오류가 발생하면 오류 메시지와 문제가 되는 SQL 부분이 텍스트 파일에 기록되어 더 나은 디버깅을 돕는다. 기본적으로 `executeSql` 함수도 실행 된 SQL 문의 백분율을 나타내는 진행 표시 줄을 보여준다. 이러한 속성이 필요하지 않은 경우 패키지는 `lowLevelQuerySql`과 `lowLevelExecuteSql` 함수도 제공한다.
+両方の機能は、広範なエラー報告機能を提供する: サーバーでエラーが発生した場合、エラーメッセージと問題のある SQL 部分がテキストファイルに書き込まれ、よりよいデバッグを助ける。既定では、`executeSql` 関数が実行された SQL ステートメントの割合を示す進行状況表示行を示す。これらのプロパティを必要としない場合、パッケージは`lowLevelQuerySql`と`lowLevelExecuteSql` 関数を提供する。
 
-### Ffdf 객체를 사용하여 질의하기
+### ffdf オブジェクトを使用してクエリする
 
-데이터베이스에서 가져올 데이터가 너무 커서 종종 메모리에 들어갈 수 없는 경우도 있다. \@ref(BigDataSupport)절에서 언급했듯이, 그러한 경우 `ff` 패키지를 사용하여 R 데이터 객체를 디스크에 저장하고 메모리에서 사용하듯이 사용할 수 있다. `DatabaseConnector`는 객체에 데이터를 직접 다운로드할 수 있다:
+データベースからインポートするデータが大きすぎて、メモリ内に入ることができない場合もある。\@ref(BigDataSupport)節で述べたように、そのような場合 `ff` パッケージを使用して R データオブジェクトをディスクに保存し、メモリ内で使用するように使用することができる. `DatabaseConnector`オブジェクトにデータを直接ダウンロードできる:
 
 ```{r eval=FALSE}
 x <- querySql.ffdf(conn, "SELECT * FROM person")
 ```
 
-x는 이제 ffdf 객체이다. 
+X は ffdf オブジェクトである。
 
-### 같은 SQL을 사용하여 다른 플랫폼 질의하기
+### のような SQL を使用して他のプラットフォームのために
 
-SqlRender 패키지의 `render` 및 `translate` 함수를 먼저 호출하는 다음과 같은 편의 함수를 사용할 수 있다: `renderTranslateExecuteSql`, `renderTranslateQuerySql`, `renderTranslateQuerySql.ffdf`. 예를 들면:
+SqlRender パッケージの `render` と `translate` 関数を呼び出すには次のような便利な関数を使用することができる: `renderTranslateExecuteSql`, `renderTranslateQuerySql`, `renderTranslateQuerySql.ffdf`. 例えば:
 
 ```{r eval=FALSE}
 x <- renderTranslateQuerySql(conn, 
                              sql = "SELECT TOP 10 * FROM @schema.person",
                              schema = "cdm_synpuf")
 ```
-SQL Server 관련 ‘TOP 10’ 구문은 PostgreSQL에서 예를 들어 ‘LIMIT 10’으로 변환되며 SQL 매개변수 `@schema` 는 제공된 값 ‘cdm_synpuf’로 인스턴스화 되는 것에 주의해야한다.
+SQL Server 関連 ‘TOP 10’ の構文は、PostgreSQL では、たとえば、‘LIMIT 10’に変換され、SQL パラメーター`@schema` は指定された値 ‘cdm_synpuf’としてインスタンス化されることに注意する必要があります。
 
-### 테이블 삽입하기
+### テーブルを挿入する
 
-`executeSql` 함수를 사용하여 SQL 문을 전송하여 데이터베이스에 데이터를 삽입할 수도 있지만, `insertTable` 함수를 사용하는 것이 더 편리하고 빠르다 (일부 최적화로 인해):
+`executeSql` 関数を使用して SQL ステートメントを送信して、データベースにデータを挿入することもできますが、`insertTable` 関数を使用することがより便利で速い (いくつかの最適化のために):
 
 ```{r eval=FALSE}
 data(mtcars)
 insertTable(conn, "mtcars", mtcars, createTable = TRUE)
 ```
 
-이 예는 mtcars 데이터 프레임을 자동으로 서버의 'mtcars'라는 테이블로 업로드하고 생성한다.
+この例では mtcars のデータフレームを自動的にサーバー上の `mtcars` という名前のテーブルにアップロードし、作成する。
 
 ## CDM 질의하기 {#QueryTheCdm}
 
