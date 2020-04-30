@@ -422,11 +422,10 @@ insertTable(conn, "mtcars", mtcars, createTable = TRUE)
 
 この例では mtcars のデータフレームを自動的にサーバー上の `mtcars` という名前のテーブルにアップロードし、作成する。
 
-## CDM 질의하기 {#QueryTheCdm}
+## CDM 質疑する {#QueryTheCdm}
 
-다음 예시에서는 CDM이 적용된 데이터베이스를 질의하기 위해 OHDSI SQL을 사용한다. 이러한 쿼리는 CDM의 데이터를 찾을 수 있는 데이터베이스 스키마를 나타내기 위해 `@cdm`을 사용한다.
-
-데이터베이스에 얼마나 많은 사람이 있는지 질의하는 것부터 시작할 수 있다:
+次の例では、CDMが適用されたデータベースに対してクエリを実行するためにOHDSI SQLを使用する。これらのクエリは、CDMのデータを見つけることができるデータベーススキーマを示すために `@cdm` を使用する。
+データベースにどのように多くの人がいるかどうかクエリすることから始めることができる：
 
 ```sql
 SELECT COUNT(*) AS person_count FROM @cdm.person;
@@ -436,7 +435,7 @@ SELECT COUNT(*) AS person_count FROM @cdm.person;
 | 26299001     |
 
 
-그렇지 않으면 observation period의 평균에 관심이 있을 수도 있다:
+それ以外の場合observation periodの平均に興味がある場合もある：
 
 ```sql
 SELECT AVG(DATEDIFF(DAY, 
@@ -447,9 +446,7 @@ FROM @cdm.observation_period;
 | NUM_YEARS |     
 | ---------:|
 | 1.980803  |
-
-테이블을 조인하여 추가 통계를 생성할 수 있다. 조인은 일반적으로 테이블의 특정 필드가 동일한 값을 갖도록 하여 여러 테이블의 필드를 결합한다. 예를 들어 두 테이블 모두 가지고 있는 PERSON_ID 필드로 PERSON 테이블과 OBSERVATION_PEROPD 테이블을 조인할 수 있다. 즉, 조인의 결과는 두 테이블의 모든 필드를 갖는 새로운 테이블과 같은 집합이지만, 모든 행에서 두 테이블의 PERSON_ID는 동일한 값을 가져야 한다. 예를 들어 PERSON 테이블의 YEAR_OF_BIRTH 필드와 함께 OBSERVATION_PERIOD 테이블의 OBSERVATION_PERIOD_END_DATE 필드를 사용하여 관찰 종료시 환자의 최고 나이를 계산할 수 있다:
-
+テーブルを結合して、追加の統計情報を生成することができる。結合は、一般的に、テーブルの特定のフィールドが同じ値を持つようにして、複数のテーブルのフィールドを結合する。例えば、両方のテーブル持っているPERSON_IDフィールドにPERSONテーブルとOBSERVATION_PEROPDテーブルを結合することができる。つまり、結合の結果は、両方のテーブルのすべてのフィールドを持つ新しいテーブルのような一連のであるが、すべての行で、両方のテーブルのPERSON_IDは同じ値を持たなければならない。例えば、PERSONテーブルのYEAR_OF_BIRTHフィールドとOBSERVATION_PERIODテーブルのOBSERVATION_PERIOD_END_DATEフィールドを使用して観察終了時の患者の最高年齢を計算することができる：
 ```sql
 SELECT MAX(YEAR(observation_period_end_date) -
            year_of_birth) AS max_age
@@ -461,7 +458,7 @@ INNER JOIN @cdm.observation_period
 | -------:|
 |      90 |
 
-관찰 시작 당시 연령 분포를 결정하려면 훨씬 더 복잡한 질의가 필요하다. 이 질의에서는 먼저 PERSON 테이블과 OBSERVATION_PERIOD을 조인하여 관찰 당시 연령을 계산한다. 또한 연령을 기준으로 이 조인된 집합의 순서를 정렬하고 order_nr로 저장한다. 이 조인의 결과를 여러 번 사용하고 싶기 때문에 “ages”라고 하는 common table expression (CTE) (`WITH ... AS`를 사용하여 정의된) 으로 정의한다. 즉, 연령을 기존 테이블인 것처럼 나타낼 수 있다. “ages”의 행 수를 세어 “n”을 생성하고 각 사분위수에 대해 order_nr이 분수 시간 "n," 보다 작은 최소 연령을 찾는다. 예를 들어, 중앙값을 찾기 위해 $order\_nr < .50 * n$인 최소 연령을 사용한다. 최소 및 최대 연령은 별도로 계산된다:
+観察開始当時の年齢分布を決定するには、はるかに複雑なクエリが必要である。このクエリでは、まず、PERSONテーブルとOBSERVATION_PERIODを結合して観察当時の年齢を計算する。また、年齢を基準に、この結合されたセットの順序を並べ替えたり、order_nrに保存する。この結合の結果を複数回使用したいので “ages”というcommon table expression (CTE) (`WITH ... AS`を使用して定義された) で定義する。つまり、年齢を既存のテーブルであるかのように示すことができる。 “ages”の行数を数え “n”を作成し、各四分位についてorder_nrが噴水の時間 "n," より小さな最低年齢を探す。たとえば、中央値を見つけるために $order\_nr < .50 * n$ある最低年齢を使用する。最小値と最大年齢は別々に計算される：
 
 ```sql
 WITH ages
@@ -504,7 +501,7 @@ CROSS JOIN (
 | -------:| -------:| ----------:| -------:| -------:|
 |       0 |       6 |         17 |      34 |      90 |
 
-SQL을 사용하는 대신 R에서 더 복잡한 계산을 수행할 수도 있다. 예를 들어, 이 코드를 사용하여 동일한 결과를 얻을 수 있다:
+SQLを使用する代わりに、Rで、より複雑な計算を実行することもできる。たとえば、このコードを使用して同じ結果を得ることができる：
 
 ```{r eval=FALSE}
 sql <- "SELECT YEAR(observation_period_start_date) -
@@ -521,9 +518,9 @@ cat("  0%  25%  50%  75% 100%
 ")
 ```
 
-서버에서 연령을 계산하고 모든 연령들을 다운로드한 다음 연령 분포를 계산한다. 그러나 이를 위해서는 데이터베이스 서버에서 수백만 행의 데이터를 다운로드해야 하므로 효율성이 떨어진다. 계산이 SQL에서 가장 잘 수행되는지 R에서 가장 잘 수행되는지의 여부를 사례별로 결정해야 한다.
+サーバーから年齢を計算して、すべての年齢をダウンロードして、年齢分布を計算する。しかし、そのためには、データベース・サーバーで数百万行のデータをダウンロードする必要があるため、効率が落ちる。計算は、SQLで最もよく実行されるRで最もよく実行されるかどうかをケースバイケースで決定する。
 
-질의는 CDM의 source value를 사용할 수도 있다. 예를 들어, 다음을 사용하여 가장 빈번한 상위 10개의 condition source code를 검색할 수 있다:
+クエリはCDMのsource valueを使用することもできる。たとえば、以下のように使用して最も頻繁上位10個のcondition source codeを検索することができる：
 
 ```sql
 SELECT TOP 10 condition_source_value, 
@@ -545,11 +542,11 @@ ORDER BY -COUNT(*);
 |                    I10 |   19453451 |
 |                   3180 |   18973883 |
 
-여기서 CONDITION_OCCURRENCE 테이블의 행을 CONDITION_SOURCE_VALUE 필드의 값으로 그룹화하고 각 그룹의 행 수를 세었다. 우리는 CONDITION_SOURCE_VALUE, count, 그리고 count의 역순을 검색했다.
+ここCONDITION_OCCURRENCEテーブルの行をCONDITION_SOURCE_VALUEフィールドの値にグループ化し、各グループの行数を数えた。私たちはCONDITION_SOURCE_VALUE、countは、countの逆を検索した。
 
-## 질의할 때 Vocabulary 사용하기
+## 照会するときVocabulary使用する
 
-많은 작업에서 Vocabulary는 유용하다. Vocabulary 테이블은 CDM의 일부이므로 SQL 쿼리를 사용하여 이용할 수 있다. Vocabulary에 대한 질의가 CDM에 대한 질의와 어떻게 결합할 수 있는지 보여준다. CDM의 많은 필드에는 CONCEPT 테이블을 사용하여 확인할 수 있는 concept ID들이 포함되어 있다. 예를 들어, 데이터베이스에서 성별에 따라 계층화된 인원수를 셀려고 할때, GENDER_CONCEPT_ID를 concept name으로 찾아 바꾸어 사용하는 것이 더 편리할 것이다:
+多くの作業ではVocabularyは有用である。 VocabularyテーブルはCDMの一部であるため、SQLクエリを使用して利用することができる。 Vocabularyの質がCDMに対する質疑とどのように組み合わせることができるか示す。 CDMの多くのフィールドには、CONCEPTテーブルを使用して確認することができるconcept IDが含まれている。たとえば、データベースから性別に応じて階層化された人数をカウントしようとするとき、GENDER_CONCEPT_IDをconcept nameに見つけ切り替えて使用することがより便利である：
 
 ```sql
 SELECT COUNT(*) AS subject_count,
@@ -564,7 +561,7 @@ GROUP BY concept_name;
 |      14927548 |       FEMALE |
 |      11371453 |         MALE |
 
-Vocabulary의 매우 강력한 특징은 계층구조에 있다. 특정 개념과 그에 속하는 *모든 하위 개념*을 찾는 쿼리를 사용하는 경우가 빈번하다. 예를 들어, ibuprofen 성분이 들어 있는 처방전의 수를 세고 싶다고 상상해보라:
+Vocabularyの非常に強力な特徴は、階層にある。特定の概念とそれに属する*すべての下位概念*を見つけるクエリを使用している場合が頻繁である。たとえば、ibuprofen成分が含まれている規定の数を数えたいと想像してください：
 
 ```sql
 SELECT COUNT(*) AS prescription_count
@@ -585,43 +582,43 @@ WHERE LOWER(ingredient.concept_name) = 'ibuprofen'
 
 \index{QueryLibrary}
 
-QueryLibrary는 CDM에 대해 일반적으로 사용되는 SQL 질의들의 라이브러리이다. 그림 \@ref(fig:queryLibrary)에 표시된 응용 프로그램[^queryLibraryUrl] 및 R 패키지로 제공된다.[^queryLibraryPackageUrl]
+QueryLibraryはCDMの一般的に使用されるSQLクエリのライブラリです。図\@ref(fig:queryLibrary)に示されているアプリケーション[^queryLibraryUrl] とRパッケージで提供され.[^queryLibraryPackageUrl]
 
 [^queryLibraryUrl]: http://data.ohdsi.org/QueryLibrary
 
 [^queryLibraryPackageUrl]: https://github.com/OHDSI/QueryLibrary
 
-```{r queryLibrary, fig.cap='QueryLibrary: CDM에 대한 SQL 조회 라이브러리.',echo=FALSE, out.width='100%', fig.align='center'}
+```{r queryLibrary, fig.cap='QueryLibrary: CDMのSQL照会ライブラリです。',echo=FALSE, out.width='100%', fig.align='center'}
 knitr::include_graphics("images/SqlAndR/queryLibrary.png")
 ```
 
-라이브러리의 목적은 새로운 사용자가 CDM에 질의하는 방법을 배우도록 돕는 것이다. 라이브러리의 질의는 OHDSI 커뮤니티에서 검토하고 승인하였다. 질의 라이브러리는 주로 교육 목적으로 사용되지만 숙련된 사용자에게 유용한 자원이기도 하다.
+ライブラリの目的は、新しいユーザーがCDMにクエリする方法を学ぶよう助けるものである。ライブラリの質はOHDSIコミュニティで検討し、承認した。質疑ライブラリは、主に教育目的のために使用され、熟練したユーザーに有用な資源でもある。
 
-QueryLibrary는 SqlRender를 사용하여 선택한 SQL 언어로 질의를 출력한다. 사용자는 CDM 데이터베이스 스키마, vocabulary 데이터베이스 스키마 (별도의 경우) 및 Oracle 임시 스키마 (필요한 경우) 를 지정할 수 있으므로 이러한 설정으로 질의가 자동으로 렌더링 된다.
+QueryLibraryはSqlRenderを使用して、選択したSQL言語でクエリを出力する。ユーザーはCDMデータベーススキーマ、vocabularyデータベーススキーマ（別の場合）およびOracle一時スキーマ（必要な場合）を指定することができますので、これらの設定でクエリが自動的に描画される。
 
-## 간단한 연구 구성하기
+## 簡単な研究を設定する
 
-### 문제 정의
+### 問題の定義
 
-Angioedema(혈관 부종)은 ACE inhibitor(ACEi)의 잘 알려진 부작용이다. [@slater_1988] ACEi 치료 첫 주에 혈관 부종의 발생률이 주당 3,000명의 환자당 1건인 것으로 추정하였다. 여기서 우리는 이 결론을 모방하고 연령과 성별에 따라 계층화한다. 간단하게 하기 위해서 우리는 하나의 ACEi: lisinopril에 중점을 둔다. 따라서 우리는 질문에 대답한다.
+Angioedema（血管浮腫）は、ACE inhibitor（ACEi）のよく知られている副作用である。 [@slater_1988] ACEi治療の最初の週に血管浮腫の発生率が週3,000人の患者につき1件であると推定した。ここでは、この結論を模倣して、年齢や性別に応じて階層化する。簡単にするために、私たちは一つのACEi：lisinoprilに重点を置く。したがって、私たちは、質問に答える。
 
-> Lisinopril 치료 개시 후 첫 주에 연령과 성별에 따라 계층화되는 혈관 부종의 비율은 얼마인가?
+> Lisinopril 治療開始後の最初の週に、年齢や性別に応じて階層化された血管浮腫の割合はどのくらいですか？
 
-### 노출
+### 曝露
 
-Exposure(노출)은 lisinopril에 대한 첫번째 노출로 정의한다. 먼저 이전에 lisinopril에 노출되지 않았음을 의미한다. 첫 노출 전에 365 일의 연속 관찰 기간이 필요하다.
+Exposure（曝露）は、lisinoprilの最初の露出に定義する。まず、以前にlisinoprilにさらされていないことを意味する。第一印象の前に、365日の連続観察期間が必要である。
 
-### 결과
+### アウトカム
 
-입원 또는 응급실 방문 중 혈관 부종 진단 코드의 발생으로 혈관 부종을 정의한다. 
+入院または緊急治療室の訪問の血管浮腫の診断コードの発生に血管浮腫を定義する。
 
-### 위험 노출 기간 (Time-at-risk)
+### リスク期間(Time-at-risk)
 
-환자가 일주일 동안 노출되었는지 여부와 관계없이 이 치료 시작 후 첫 주에 발생률을 계산한다.
+患者が一週間露出されたかどうかに関係なく、この治療開始後の最初の週に発生率を計算する。
 
-## SQL과 R을 사용하여 연구 구현
+## SQLとRを使用して研究を実装
 
-OHDSI 툴 규약에 구속되지 않지만 동일한 원칙을 따르는 것은 도움이 된다. 이 경우 OHDSI 툴의 작동 방식과 유사하게 SQL을 사용하여 코호트 테이블을 채운다. 코호트 테이블은 CDM에 정의되어 있으며 사전 정의된 필드 집합도 있다. 먼저 쓰기 접근 권한이 있는 데이터베이스 스키마에 COHORT 테이블을 만들어야 하는데, 이는 CDM 형식으로 데이터를 저장하는 데이터베이스 스키마와 동일하지 않을 수 있다. 
+OHDSIツール規約に拘束されないが、同じ原理に従うことは、有用である。この場合、OHDSIツールの動作と同様に、SQLを使用してコホートテーブルを満たす。コホートテーブルはCDMに定義されており、事前定義されたフィールドのセットもある。まず、書き込みアクセス権があるデータベーススキーマにCOHORTテーブルを作成するために、これはCDMの形式でデータを格納するデータベーススキーマと同じでないことができる。 
 
 ```{r eval=FALSE}
 library(DatabaseConnector)
@@ -646,11 +643,11 @@ renderTranslateExecuteSql(conn, sql,
                           cohort_table = cohortTable)
 ```
 
-여기서는 데이터베이스 스키마 및 테이블 이름을 매개 변수화하여 다른 환경에 쉽게 적용할 수 있다. 결과는 데이터베이스 서버의 빈 테이블이다.
+ここでは、データベーススキーマとテーブル名をパラメータ化して、他の環境に容易に適用することができる。結果は、データベース・サーバーの空のテーブルである。
 
-### 노출 코호트
+### 曝露コホート
 
-다음으로 노출 코호트를 만들어 COHORT 테이블에 삽입한다:
+次に、曝露コホートを作成COHORTテーブルに挿入する：
 
 ```{r eval=FALSE}
 sql <- "
@@ -696,11 +693,11 @@ renderTranslateExecuteSql(conn, sql,
                           cdm_db_schema = cdmDbSchema)
 ```
 
-여기에서는 DRUG_EXPOSURE 테이블에서 자동으로 파생되는 CDM의 표준 테이블인 DRUG ERA 테이블을 사용한다. DRUG ERA 테이블에는 성분 수준에서 연속 노출 기간이 포함되어 있다. 따라서 lisinopril을 검색할 수 있으며, 이는 lisinopril을 함유한 약물에 대한 모든 노출을 자동으로 식별한다. 사람당 첫 번째 약물 노출을 취한 다음 OBSERVATION_PERIOD 테이블과 조인하고 한 사람이 여러 관찰 기간을 가질 수 있으므로 약물 노출이 포함된 기간에만 조인해야 한다. 그런 다음 OBSERVATION_PERIOD_START_DATE와 COHORT_START_DATE 사이에 적어도 365일이 필요하다.
+ここでは、DRUG_EXPOSUREテーブルから自動的に派生したCDMの標準テーブルであるDRUG ERAテーブルを使用する。 DRUG ERAテーブルには、成分のレベルで連続露出期間が含まれている。したがってlisinoprilを検索することができ、これはlisinoprilを含有した薬物のすべての露出を自動的に識別します。人あたりの最初の薬物暴露を取った次のOBSERVATION_PERIODテーブルと結合し、一人が複数観察期間を持つことができますので、薬物の露出が含まれている期間のみ結合する必要がある。次にOBSERVATION_PERIOD_START_DATEとCOHORT_START_DATEの間に、少なくとも365日が必要である。
 
-### 결과 코호트
+### アウトカムコホート
 
-마지막으로, 우리는 결과(outcome) 코호트를 만들어야 한다:
+最後に、我々はアウトカム（outcome）コホートを作成する：
 
 ```{r eval=FALSE}
 sql <- "
@@ -737,11 +734,11 @@ renderTranslateExecuteSql(conn, sql,
                           cdm_db_schema = cdmDbSchema)
 ```
 
-CONDITION OCCURRECE 테이블과 CONCEPT ANCESTOR 테이블을 조인하여 모든 혈관 부종과 그 자손을 찾는다. 같은 날에 여러 혈관 부종의 진단이 여러 혈관 부종 발생이 아닌 동일한 사건일 가능성이 높기 때문에 DISTINCT를 사용하여 하루에 하나의 행만 선택하도록 한다. 이러한 발생을 VISIT_OCCURRENCE 테이블과 조인하여 입원이나 응급실 환경에서 진단되었는지 확인한다.
+CONDITION OCCURRECEテーブルとCONCEPT ANCESTORテーブルを結合して、すべての血管浮腫とその子孫を探す。同日に複数の血管浮腫の診断は、複数の血管浮腫の発生がなく、同じ事件である可能性が高いため、DISTINCTを使用して、一日に1行だけ選択するようにする。これらの発生をVISIT_OCCURRENCEテーブルと結合して、入院や緊急治療室環境での診断されたことを確認する。
 
-### 발생률 계산
+### 発生率の計算
 
-코호트가 준비되었으므로 연령과 성별에 따라 계층화되는 발생률을 계산할 수 있다:
+コホートが準備されたので、年齢や性別に応じて層別化された発生率を計算することができる：
 
 ```{r eval=FALSE}
 sql <- "
@@ -804,11 +801,11 @@ results <- renderTranslateQuerySql(conn, sql,
                                    snakeCaseToCamelCase = TRUE)
 ```
 
-우선 적절한 위험 노출 기간으로 모든 노출을 포함하는 CTE인 "tar"를 만든다. OBSERVATION_PERIOD_END_DATE에서 위험 관찰 기간을 단축한다는 점에 유의한다. 또한 10년 단위로 나이를 계산하고 성별을 파악한다. CTE를 사용하면 동일한 중간 결과 집합을 질의에서 여러 번 사용할 수 있다는 장점이 있다. 이 경우 위험 관찰 기간 동안 발생하는 혈관 부종 사건의 수와 총 위험 관찰 기간의 양을 계산하는 데 사용된다.
+まず、適切なリスク期間ですべての露出を含むCTEである "tar" を作る。 OBSERVATION_PERIOD_END_DATEで危険観察期間を短縮することに注意する。また、10年単位で年齢を計算し、性別を把握する。 CTEを使用すると、同じ中間結果セットを照会で複数回使用できるという長所がある。この場合、危険観察期間中に発生する血管浮腫事件の数との合計危険観察期間の量を計算するために使用される。
 
-SQL에서는 필드 이름에 snake_case(대소문자를 구분하지 않는)를 사용하는 반면 R에서는 camelCase(대소문자를 구분하는)를 사용하는 경향이 있기 때문 `snakeCaseToCamelCase = TRUE`로 한다. `results` 데이터 프레임 열 이름은 이제 camelCase이다. 
+SQLでは、フィールド名にsnake_case（大文字と小文字を区別しない）を使用するのに対しRはcamelCase（大文字と小文字を区別する）を使用する傾向があるから `snakeCaseToCamelCase = TRUE`とする。 `results` データフレームの列名は、現在camelCaseある。
 
-ggplot2 패키지의 도움을 받아 다음과 같은 결과를 쉽게 표시할 수 있다:
+ggplot2パッケージの助けを借りて、次のような結果を簡単に表示することができる：
 
 ```{r eval=FALSE}
 # Compute incidence rate (IR) :
@@ -827,9 +824,9 @@ ggplot(results, aes(x = age, y = ir, group = gender, color = gender)) +
 knitr::include_graphics("images/SqlAndR/ir.png")
 ```
 
-### 마무리하기
+### 仕上げする
 
-생성한 테이블을 정리하고 연결을 닫는 것을 잊지 마십시오:
+生成されたテーブルを整理して、接続を閉じることを忘れないでください：
 
 ```{r eval=FALSE}
 sql <- "
@@ -843,58 +840,58 @@ renderTranslateExecuteSql(conn, sql,
 disconnect(conn)
 ```
 
-### 호환성
+### 互換性
 
-OHDSI SQL을 DatabaseConnector 및 SQLRender와 함께 사용하기 때문에 여기서 검토한 코드는 OHDSI가 지원하는 모든 데이터베이스 플랫폼에서 실행된다. 
+OHDSI SQLをDatabaseConnectorとSQLRenderで使用するので、ここで検討したコードは、OHDSIがサポートするすべてのデータベース・プラットフォームで実行される。
 
-시연 목적으로 수작업으로 만든 SQL을 사용하여 코호트를 만들기로 했다는 점에 유의하십시오. ATLAS에서 코호트 정의를 구성하고 ATALS에서 생성된 SQL을 사용하여 코호트를 인스턴스화 하는 것이 더 편리했을 것이다. ATLAS는 또한 OHDSI SQL을 생성하였고, 따라서 SqlRender 및 DatabaseConnector와 함께 쉽게 사용할 수 있다.
+デモの目的で手作業で作成したSQLを使用してコホートを作ることにしたという点に注意してください。 ATLASでコホート定義を構成しATALSで生成されたSQLを使用してコホートをインスタンス化することが、より便利だろう。 ATLASはまたOHDSI SQLを生成し、このようにSqlRenderとDatabaseConnectorと簡単に使用することができる。
 
-## 요약
+## 要約
 
 ```{block2, type='rmdsummary'}
-- **SQL**은 공통 데이터 모델을 따르는 데이터베이스를 포함하여 데이터베이스를 조회하기 위한 표준 언어이다.
+- **SQL**は、共通データモデルに準拠し、データベースを含むデータベースを照会するための標準的な言語である。
 
-- 데이터베이스 플랫폼마다 SQL 언어가 다르며 이를 질의하기 위해서는 다른 툴이 필요하다.
+- データベースプラットフォームごとにSQL言語が異なり、これを質疑するためには、他のツールが必要である。
 
-- **SqlRender** 및 **DatabaseConnector** R 패키지는 CDM에서 데이터를 질의하는 통합된 방법을 제공하므로 동일한 분석 코드를 수정없이 다른 환경에서 실행할 수 있다.
+- **SqlRender** と**DatabaseConnector** Rパッケージは、CDMでデータを照会する統合された方法を提供し、同じ分析コードを変更せずに、他の環境で実行することができる。
 
-- R과 SQL을 함께 사용하면 OHDSI 툴에서 지원하지 않는 사용자 맞춤 분석 연구를 구현할 수 있다.
+- Rと SQLを一緒に使用すると、OHDSIツールでサポートされていないユーザーカスタマイズ分析の研究を実装することができる。
 
-- **QueryLibrary** 는 CDM에 재사용 가능한 SQL 질의 모음을 제공한다.
+- **QueryLibrary** はCDMに再利用可能なSQLクエリーのコレクションを提供する。
 
 ```
 
-## 예제
+## 例
 
-#### 전제조건 {-}
+#### 前提条件 {-}
 
-이 연습문제에서는 \@ref(installR)절에서 설명된 대로 R, R-Studio, Java가 설치되었다고 가정한다. 또한 다음을 사용하여 설치할 수 있는 [SqlRender](https://ohdsi.github.io/SqlRender/), [DatabaseConnector](https://ohdsi.github.io/DatabaseConnector/) 및 [Eunomia](https://ohdsi.github.io/Eunomia/) 패키지도 필요하다:
+この練習問題では、 \@ref(installR)節で説明したように R, R-Studio, Javaがインストールされ仮定する。また、次のを使用してインストールすることができる [SqlRender](https://ohdsi.github.io/SqlRender/), [DatabaseConnector](https://ohdsi.github.io/DatabaseConnector/) と [Eunomia](https://ohdsi.github.io/Eunomia/) パッケージも必要である:
 
 ```{r eval=FALSE}
 install.packages(c("SqlRender", "DatabaseConnector", "devtools"))
 devtools::install_github("ohdsi/Eunomia", ref = "v1.0.0")
 ```
 
-Eunomia 패키지는 로컬 R 세션 내에서 실행될 CDM의 시뮬레이션된 다른 데이터 세트를 제공한다. 연결 세부 사항은 다음을 사용하여 얻을 수 있다:
+Eunomiaパッケージは、ローカルRセッション内で実行されるCDMのシミュレーションされた他のデータセットを提供する。接続の詳細は、以下を使用して得ることができる：
 
 ```{r eval=FALSE}
 connectionDetails <- Eunomia::getEunomiaConnectionDetails()
 ```
 
-CDM 데이터베이스 스키마는 "main"이다.
+CDMデータベーススキーマは、"main"である。
 
 ```{exercise, exercisePeopleCount}
-SQL과 R을 사용하여 데이터베이스에 몇 사람이 있는지 계산하십시오.
-
+SQLとRを使用してデータベースにいくつかの人がいるかどうかを計算してください。
 ```
 
 ```{exercise, exerciseCelecoxibUsers}
-SQL과 R을 사용하여 celecoxib를 적어도 한번 이상 처방 한 사람을 계산하십시오.
-
+SQLとRを使用してcelecoxibを少なくとも一回以上処方された人を計算してください。
 ```
+
 ```{exercise, exerciseGiBleedsDuringCelecoxib}
-SQL과 R을 사용하여 celecoxib에 노출되는 동안 얼마나 많은 위장 출혈(gastrointestinal hemorrhage)이 있는지 진단한다. (힌트: 위장 출혈의 concept ID는 [192671](http://athena.ohdsi.org/search-terms/terms/192671)이다.)
+SQLとRを使用してcelecoxibにさらされている間、どのように多くの胃出血（gastrointestinal hemorrhage）があることを診断する。 （ヒント：胃腸出血のconcept IDは [192671](http://athena.ohdsi.org/search-terms/terms/192671)である。)
 
 ```
 
-제안된 답변은 부록 \@ref(SqlAndRanswers)에서 찾을 수 있다.
+提案された回答は、付録 \@ref(SqlAndRanswers)で見つけることができる。
+
